@@ -8,6 +8,27 @@
       "when": 1781792969793,
       "tag": "0000_famous_sway",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1782228067319,
+      "tag": "0001_legal_power_man",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1782247240012,
+      "tag": "0002_curvy_sentinel",
+      "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1782249690274,
+      "tag": "0003_cultured_galactus",
+      "breakpoints": true
     }
   ]
 }

@@ -8,28 +8,31 @@ import {
   ItemTitle,
 } from "@/components/ui/item";
 
-interface PostProps {
-    text: string;
+interface FeaturedProps {
+    slug: string;
+    title: string;
+    publishedAt: Date | null;
+    description: string;
 }
 
-export default function FeaturedPost({text}: PostProps) {
+export default function FeaturedPost(post: FeaturedProps) {
 
     return(
-        <Item variant={'outline'} className=" w-full" asChild>
-            <Link href={'/#'}>
+        <Item variant={'outline'} className="w-full" asChild>
+            <Link href={`/blog/${post.slug}`}>
                 <ItemMedia variant={'image'} className="size-20 sm:size-30 md:size-50 lg:size-80 aspect-square">
                     <Image src={'/default.png'} alt="yes" fill></Image>
                 </ItemMedia>
                 <ItemContent>
                     <ItemTitle className="sm:text-2xl md:text-3xl lg:text-4xl">
-                        Lorem ipsum dolor sit.
+                        {post.title}
                     </ItemTitle>
                     
                     <ItemDescription className="sm:text-sm md:text-md lg:text-lg">
-                        06/07/2026
+                        {post.publishedAt!.toLocaleDateString()}
                     </ItemDescription>
                     <ItemDescription className="line-clamp-none">
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quisquam minima, vitae blanditiis repellendus illo sit molestiae, ipsam magni, ducimus animi illum dolore. Officia, tempora sequi?
+                        {post.description}
                     </ItemDescription>
                 </ItemContent>
             </Link>

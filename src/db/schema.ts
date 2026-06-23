@@ -7,9 +7,10 @@ export const posts = pgTable('posts', {
     title : text('title').notNull(),
     body : text('body').notNull(),
     excerpt : text('excerpt'),
+    description : text('description').notNull(),
     published : boolean('published').notNull().default(false),
     publishedAt : timestamp('published_at'),
     createdAt : timestamp('created_at').notNull().defaultNow(),
-    updatedAt : timestamp('updated_at').notNull().defaultNow().$onUpdate(() => new Date())
-
+    updatedAt : timestamp('updated_at').notNull().defaultNow().$onUpdate(() => new Date()),
+    featured : boolean('featured').notNull().default(false)
 })

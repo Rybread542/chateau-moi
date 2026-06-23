@@ -1,7 +1,7 @@
+import 'dotenv/config';
 import Image from "next/image";
-import NavButton from "@/components/navbutton";
 import FeaturedPost from "@/components/featuredpost";
-
+import { getPosts } from '@/db/posts';
 import Link from "next/link";
 import {
   Item,
@@ -11,41 +11,25 @@ import {
   ItemTitle,
 } from "@/components/ui/item";
 
+const posts = await getPosts('list', null)
+const featuredPost = posts.find(item => item.featured)!
+const featuredProps = {
+    slug: featuredPost.slug,
+    title: featuredPost.title,
+    description: featuredPost.description,
+    publishedAt: featuredPost.publishedAt  
+}
+
+
 
 export default function Blog() {
-  const filler = [
-    {
-        title: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur, reprehenderit!',
-        slug: 'lorem-ipsum-dolor-sit-amet1',
-        publishedAt: '06/07/2026'
-    },
-    {
-        title: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur, reprehenderit!',
-        slug: 'lorem-ipsum-dolor-sit-amet2',
-        publishedAt: '06/06/2026'
-    },
-    {
-        title: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur, reprehenderit!',
-        slug: 'lorem-ipsum-dolor-sit-amet3',
-        publishedAt: '06/05/2026'
-    },
-    {
-        title: 'Lorem ipsum dolor sit amet consectetur adipisicing elit.',
-        description: 'Lorem ipsum dolor sit amet consectetur adipisicing elit. Pariatur, reprehenderit!',
-        slug: 'lorem-ipsum-dolor-sit-amet4',
-        publishedAt: '06/04/2026'
-    },
-  ]
 
   return (
       <main className="flex flex-col grow px-4 py-12">
            <div className="mx-auto text-3xl">Blog</div>
            <div className="grid gap-6 md:grid-cols-3">
                 <div className="md:col-span-2 min-w-0 my-4">
-                    <FeaturedPost text="yes"></FeaturedPost>
+                    <FeaturedPost {...featuredProps}></FeaturedPost>
                 </div>
                 <aside></aside>
            </div>
@@ -53,7 +37,7 @@ export default function Blog() {
                 More posts
            </div>
            <div className="flex flex-col gap-4">
-                {filler.map(post => (
+                {posts.map(post => (
                     <Item key={post.slug} variant={'outline'} className="h-full w-full" asChild>
                         <Link href={'/blog/' + post.slug}>
                             <ItemMedia variant={'image'}>
@@ -67,7 +51,7 @@ export default function Blog() {
                                     {post.description}
                                 </ItemDescription>
                                 <ItemDescription>
-                                    {post.publishedAt}
+                                    {post.publishedAt?.toLocaleDateString()}
                                 </ItemDescription>
                             </ItemContent>
                         </Link>

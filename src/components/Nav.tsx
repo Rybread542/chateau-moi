@@ -23,7 +23,7 @@ export default function Nav() {
     if (path !== '/'){
         return (
 
-            <nav className="">
+            <nav className="fixed">
                 {LINKS.map(link => (
                     <Link key={link.href} href={link.href}>
                         {link.label}

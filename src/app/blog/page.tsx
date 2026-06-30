@@ -1,28 +1,31 @@
 import 'dotenv/config';
-import Image from "next/image";
 import FeaturedPost from "@/components/featuredpost";
-import { getPosts } from '@/db/posts';
-import Link from "next/link";
-import {
-  Item,
-  ItemContent,
-  ItemDescription,
-  ItemMedia,
-  ItemTitle,
-} from "@/components/ui/item";
+import { getPublishedPosts } from '@/db/posts';
+import BlogListItem from '@/components/blog-list-item';
 
-const posts = await getPosts('list', null)
-const featuredPost = posts.find(item => item.featured)!
-const featuredProps = {
-    slug: featuredPost.slug,
-    title: featuredPost.title,
-    description: featuredPost.description,
-    publishedAt: featuredPost.publishedAt  
+
+export default async function Blog() {
+
+    const posts = await getPublishedPosts()
+    if (!posts) {
+        return (
+
+        <main className="flex flex-col items-center mx-auto h-screen">
+            <div className="mx-auto text-3xl">Blog</div>
+            <div className="flex items-center mx-auto flex-1">
+                <div>There's nothing here! Wow!</div>
+            </div>
+        </main>
+
+        )
+    }
+    const featuredPost = posts.find(item => item.featured)!
+    const featuredProps = {
+        slug: featuredPost.slug,
+        title: featuredPost.title,
+        description: featuredPost.description,
+        publishedAt: featuredPost.publishedAt  
 }
-
-
-
-export default function Blog() {
 
   return (
       <main className="flex flex-col grow px-4 py-12">
@@ -37,25 +40,8 @@ export default function Blog() {
                 More posts
            </div>
            <div className="flex flex-col gap-4">
-                {posts.map(post => (
-                    <Item key={post.slug} variant={'outline'} className="h-full w-full" asChild>
-                        <Link href={'/blog/' + post.slug}>
-                            <ItemMedia variant={'image'}>
-                                <Image src={'/default.png'} alt="yes" fill className=""></Image>
-                            </ItemMedia>
-                            <ItemContent>
-                                <ItemTitle>
-                                    {post.title}
-                                </ItemTitle>
-                                <ItemDescription>
-                                    {post.description}
-                                </ItemDescription>
-                                <ItemDescription>
-                                    {post.publishedAt?.toLocaleDateString()}
-                                </ItemDescription>
-                            </ItemContent>
-                        </Link>
-                    </Item>
+                {posts.filter(post => !post.featured).map(post => (
+                    <BlogListItem key={post.slug} {...post} variant='list'/> 
                 ))}
            </div>
       </main>

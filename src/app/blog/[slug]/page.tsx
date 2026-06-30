@@ -1,6 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
-import { getPosts } from "@/db/posts";
+import { getPostBySlug } from "@/db/posts";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
@@ -13,7 +13,7 @@ interface PageProps {
 export default async function BlogPost({params} : PageProps) {
 
   const { slug } = await params
-  const postInfo = await getPosts(null, slug)
+  const postInfo = await getPostBySlug(slug)
   const post = postInfo[0]
 
   return (

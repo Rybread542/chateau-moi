@@ -10,7 +10,7 @@ interface ButtonProps {
 export default function NavButton({text, navTo}: ButtonProps) {
 
     return(
-        <Button variant={'outline'} size={'lg'}>
+        <Button variant={'outline'} size={'lg'} asChild>
             <Link href={navTo}>{text}</Link>
         </Button>
     )

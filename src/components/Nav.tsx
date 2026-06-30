@@ -20,7 +20,7 @@ export default function Nav() {
 
     const path = usePathname()
 
-    if (path !== '/'){
+    if (path !== '/' && !path.startsWith('/admin')){
         return (
 
             <nav className="fixed">

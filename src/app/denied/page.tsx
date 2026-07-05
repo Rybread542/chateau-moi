@@ -10,6 +10,5 @@ export default async function InvalidUser() {
     <NavButton text="Home" navTo="/"></NavButton>
   </div>
 
-
 )
   }

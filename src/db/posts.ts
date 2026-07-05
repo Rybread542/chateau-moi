@@ -1,11 +1,12 @@
 'use server';
 import 'dotenv/config';
 import { db } from "./index";
-import { posts } from "./schema";
-import { eq, or, desc, count, sql, and } from 'drizzle-orm';
+import { posts, tags, tagsJoin } from "./schema";
+import { eq, or, desc, count, sql, and, inArray, getTableColumns, arrayContains, isNotNull } from 'drizzle-orm';
 import { revalidatePath } from 'next/cache';
+import { PublishedPost, Post } from '@/lib/utils';
 
-type Post = {
+type NewPost = {
     slug: string;
     title: string;
     body:string;
@@ -16,10 +17,48 @@ type Post = {
     tags: string[];
 }
 
+async function setTags(id: string, tagsArr: string[]) {
+    await db.transaction(async (tx) => {
+        await tx.insert(tags)
+        .values(tagsArr.map((tag) => ({ tag })))
+        .onConflictDoNothing()
+        
+        const tagRows = await tx.select({ id: tags.id, tag: tags.tag })
+        .from(tags)
+        .where(inArray(tags.tag, tagsArr))
 
-export async function createPost(data: Post) {
+        await tx.delete(tagsJoin)
+        .where(eq(tagsJoin.postId, id))
+
+        await tx.insert(tagsJoin)
+        .values(tagRows.map((r) => ({ postId: id, tagId: r.id })))
+    })
+
+    
+}
+
+
+export async function getTagCounts() {
+
+    const tagCounts = await db.select({
+        tag: tags.tag,
+        count: count(tagsJoin.postId)
+    })
+    .from(tags)
+    .leftJoin(tagsJoin, eq(tagsJoin.tagId, tags.id))
+    .leftJoin(posts, eq(tagsJoin.postId, posts.id))
+    .where(eq(posts.published, true))
+    .groupBy(tags.tag)
+    .orderBy(desc(count(tagsJoin.postId)))
+
+    return tagCounts
+}
+
+
+export async function createPost(data: NewPost) {
     console.log('inserting post...')
-    const [post] = await db
+
+    const [newPostId] = await db
     .insert(posts)
     .values({
         slug: data.slug,
@@ -29,12 +68,13 @@ export async function createPost(data: Post) {
         description: data.description,
         published: data.published,
         publishedAt: data.published ? new Date() : null,
-        featured: data.featured,
-        tags: data.tags
+        featured: data.featured
     })
-    .returning()
-    
-    return post
+    .returning({id: posts.id})
+
+    if (data.tags.length > 0) {
+        await setTags(newPostId.id, data.tags)
+    }
 }
 
 export async function getPostBySlug(slug: string) {
@@ -43,32 +83,255 @@ export async function getPostBySlug(slug: string) {
     .where(eq(posts.slug, slug))
     .limit(1)
 
-    return post
+    return post as Post[]
 }
 
 export async function getPublishedPosts() {
     const publishedPosts = await db.select({
+        ...getTableColumns(posts),
+        tags: sql<string[]>
+        `coalesce(
+            array_agg(${tags.tag})
+            filter (where ${tags.id} is not null),
+            '{}'
+            )`
+    })
+    .from(posts)
+    .leftJoin(tagsJoin, eq(posts.id, tagsJoin.postId))
+    .leftJoin(tags, eq(tagsJoin.tagId, tags.id))
+    .where(eq(posts.published, true))
+    .groupBy(posts.id)
+    .orderBy(desc(posts.publishedAt))
+
+    return publishedPosts as PublishedPost[]
+}
+
+export async function getPostsPage(page: number, perPage: 10) {
+
+    const offset = (page - 1) * perPage
+
+    const publishedPosts = await db.select({
+        ...getTableColumns(posts),
+        tags: sql<string[]>
+        `coalesce(
+            array_agg(${tags.tag})
+            filter (where ${tags.id} is not null),
+            '{}'
+            )`,
+        totalCount: sql<number>`count(*) over ()::int`,
+    })
+    .from(posts)
+    .leftJoin(tagsJoin, eq(posts.id, tagsJoin.postId))
+    .leftJoin(tags, eq(tagsJoin.tagId, tags.id))
+    .where(and(
+        eq(posts.published, true),
+        isNotNull(posts.publishedAt)
+        ))
+    .groupBy(posts.id)
+    .orderBy(desc(posts.publishedAt))
+    .limit(perPage)
+    .offset(offset)
+
+    const total = publishedPosts[0]?.totalCount ?? 0
+    const finalPosts = publishedPosts.map(p => {
+        const {totalCount, ...data} = p
+        return data
+    })
+
+    return {posts: finalPosts as PublishedPost[], total}
+
+    
+
+}
+
+export async function getSearchPostsPage(query: string, page: number, perPage: 10) {
+
+    const doc = sql`
+        setweight(to_tsvector('english', coalesce(${posts.title}, '')),       'A') ||
+        setweight(to_tsvector('english', coalesce(${posts.description}, '')), 'B') ||
+        setweight(to_tsvector('english', coalesce(${posts.body}, '')),        'C')
+    `
+    const tsQuery = sql`websearch_to_tsquery('english', ${query})`
+
+    const offset = (page - 1) * perPage
+
+    const searchPosts = await db.select({
+        ...getTableColumns(posts),
+        tags: sql<string[]>
+        `coalesce(
+            array_agg(${tags.tag})
+            filter (where ${tags.id} is not null),
+            '{}'
+            )`,
+        totalCount: sql<number>`count(*) over ()::int`,
+    })
+    .from(posts)
+    .leftJoin(tagsJoin, eq(posts.id, tagsJoin.postId))
+    .leftJoin(tags, eq(tagsJoin.tagId, tags.id))
+    .where(and(
+        eq(posts.published, true),
+        isNotNull(posts.publishedAt),
+        sql`${doc} @@ ${tsQuery}`
+    ))
+    .groupBy(posts.id)
+    .orderBy(desc(sql`ts_rank(${doc}, ${tsQuery})`))
+    .limit(perPage)
+    .offset(offset)
+
+    const total = searchPosts[0]?.totalCount ?? 0
+    const finalSearchPosts = searchPosts.map(p => {
+        const {totalCount, ...data} = p
+        return data
+    })
+
+    return {posts: finalSearchPosts as PublishedPost[], total}
+
+}
+
+
+export async function getTagPostsPage(tag: string, page: number, perPage: 10) {
+
+    const offset = (page - 1) * perPage
+
+    const tagPosts = await db.select({
+        ...getTableColumns(posts),
+        tags: sql<string[]>
+        `coalesce(
+            array_agg(${tags.tag} order by (${tags.tag} = ${tag}) desc)
+            filter (where ${tags.id} is not null),
+            '{}'
+            )`,
+        totalCount: sql<number>`count(*) over ()::int`,
+    })
+    .from(posts)
+    .leftJoin(tagsJoin, eq(posts.id, tagsJoin.postId))
+    .leftJoin(tags, eq(tagsJoin.tagId, tags.id))
+    .where(and(
+        eq(posts.published, true),
+        isNotNull(posts.publishedAt)
+        ))
+    .groupBy(posts.id)
+    .having(sql`${tag} = any(array_agg(${tags.tag}))`)
+    .orderBy(desc(posts.publishedAt))
+    .limit(perPage)
+    .offset(offset)
+    
+    const total = tagPosts[0]?.totalCount ?? 0
+    const finalTagPosts = tagPosts.map(p => {
+        const {totalCount, ...data} = p
+        return data
+    })
+    
+    return {posts: finalTagPosts as PublishedPost[], total}
+}
+
+export async function getAllPosts() {
+    const allPosts = await db.select({
+        ...getTableColumns(posts),
+        tags: sql<string[]>
+        `coalesce(
+            array_agg(${tags.tag})
+            filter (where ${tags.id} is not null),
+            '{}'
+            )`
+    })
+    .from(posts)
+    .leftJoin(tagsJoin, eq(posts.id, tagsJoin.postId))
+    .leftJoin(tags, eq(tagsJoin.tagId, tags.id))
+    .groupBy(posts.id)
+    .orderBy(desc(posts.createdAt))
+
+    return allPosts as Post[]
+}
+
+export async function getFeaturedPost() {
+    const featuredPost = await db.select({
+        ...getTableColumns(posts),
+        tags: sql<string[]>
+        `coalesce(
+            array_agg(${tags.tag})
+            filter (where ${tags.id} is not null),
+            '{}'
+            )`
+    })
+    .from(posts)
+    .leftJoin(tagsJoin, eq(posts.id, tagsJoin.postId))
+    .leftJoin(tags, eq(tagsJoin.tagId, tags.id))
+    .where(eq(posts.featured, true))
+    .groupBy(posts.id)
+    .limit(1)
+
+    return featuredPost[0] as PublishedPost
+}
+
+export async function searchPosts(query: string) {
+    const doc = sql`
+        setweight(to_tsvector('english', coalesce(${posts.title}, '')),       'A') ||
+        setweight(to_tsvector('english', coalesce(${posts.description}, '')), 'B') ||
+        setweight(to_tsvector('english', coalesce(${posts.body}, '')),        'C')
+    `
+    const tsQuery = sql`websearch_to_tsquery('english', ${query})`
+
+
+    const search = await db.select({
+        id: posts.id,
         slug: posts.slug,
         title: posts.title,
         excerpt: posts.excerpt,
         featured: posts.featured,
         description: posts.description,
         publishedAt: posts.publishedAt,
-        tags: posts.tags
+        tags: sql<string[]>
+        `coalesce(
+            array_agg(${tags.tag})
+            filter (where ${tags.id} is not null),
+            '{}'
+            )`,
+        rank: sql<number>`ts_rank(${doc}, ${tsQuery})`
     })
     .from(posts)
-    .where(eq(posts.published, true))
-    .orderBy(desc(posts.publishedAt))
+    .leftJoin(tagsJoin, eq(posts.id, tagsJoin.postId))
+    .leftJoin(tags, eq(tagsJoin.tagId, tags.id))
+    .where(and(
+        eq(posts.published, true),
+        isNotNull(posts.publishedAt),
+        sql`${doc} @@ ${tsQuery}`
+    ))
+    .groupBy(posts.id)
+    .orderBy(desc(sql`ts_rank(${doc}, ${tsQuery})`))
 
-    return publishedPosts
+    return search 
 }
 
-export async function getAllPosts() {
-    const allPosts = await db.select()
-    .from(posts)
-    .orderBy(desc(posts.createdAt))
 
-    return allPosts
+export async function getPostsByTag(tag: string) {
+
+    const search = await db.select({
+        id: posts.id,
+        slug: posts.slug,
+        title: posts.title,
+        excerpt: posts.excerpt,
+        featured: posts.featured,
+        description: posts.description,
+        publishedAt: posts.publishedAt,
+        tags: sql<string[]>
+        `coalesce(
+            array_agg(${tags.tag} order by (${tags.tag} = ${tag}) desc)
+            filter (where ${tags.id} is not null),
+            '{}'
+            )`
+    })
+    .from(posts)
+    .leftJoin(tagsJoin, eq(posts.id, tagsJoin.postId))
+    .leftJoin(tags, eq(tagsJoin.tagId, tags.id))
+    .where(and(
+        eq(posts.published, true),
+        isNotNull(posts.publishedAt)
+        ))
+    .groupBy(posts.id)
+    .having(sql`${tag} = any(array_agg(${tags.tag}))`)
+    .orderBy(desc(posts.publishedAt))
+    return search
 }
 
 
@@ -106,13 +369,20 @@ export async function editPost(post: Post) {
         body: post.body,
         description: post.description,
         excerpt: post.excerpt,
-        tags: post.tags
     })
     .where(eq(posts.slug, post.slug))
+
+    if (post.tags.length > 0) {
+        await setTags(currPost.id, post.tags)
+    }
 } 
 
-export async function deletePost(slug: string) {
-    await db.delete(posts).where(eq(posts.slug, slug))
+export async function deletePost(id: string) {
+    await db.delete(posts)
+    .where(eq(posts.id, id))
+
+    await db.delete(tagsJoin)
+    .where(eq(tagsJoin.postId, id))
     revalidatePath('/admin')
 }
 
@@ -126,6 +396,7 @@ export async function setPublished(slug: string, published: boolean) {
         sql`${posts.publishedAt}` }).where(eq(posts.slug, slug))
     revalidatePath('/admin')
 }
+
 export async function setFeatured(slug: string) {
     await db.update(posts).set({ featured: false })
     await db.update(posts).set({ featured: true }).where(eq(posts.slug, slug))
@@ -138,38 +409,63 @@ export async function getNumPosts() {
 }
 
 export async function getPublishedPostsView() {
-    const published = await db.select()
+    const published = await db.select({
+        ...getTableColumns(posts),
+        tags: sql<string[]>
+        `coalesce(
+            array_agg(${tags.tag})
+            filter (where ${tags.id} is not null),
+            '{}'
+            )`
+    })
     .from(posts)
+    .leftJoin(tagsJoin, eq(posts.id, tagsJoin.postId))
+    .leftJoin(tags, eq(tagsJoin.tagId, tags.id))
     .where(eq(posts.published, true))
+    .groupBy(posts.id)
     .orderBy(desc(posts.createdAt))
-    return published
+
+    return published as Post[]
 }
 
 export async function getUnpublishedPostsView() {
-    const unpublished = await db.select()
+    const unpublished = await db.select({
+        ...getTableColumns(posts),
+        tags: sql<string[]>
+        `coalesce(
+            array_agg(${tags.tag})
+            filter (where ${tags.id} is not null),
+            '{}'
+            )`
+    })
     .from(posts)
+    .leftJoin(tagsJoin, eq(posts.id, tagsJoin.postId))
+    .leftJoin(tags, eq(tagsJoin.tagId, tags.id))
     .where(eq(posts.published, false))
+    .groupBy(posts.id)
     .orderBy(desc(posts.createdAt))
-    return unpublished
+    return unpublished as Post[]
 }
 
 export async function getFeaturedPostsView() {
-    const featured = await db.select()
+    const featured = await db.select({
+        ...getTableColumns(posts),
+        tags: sql<string[]>
+        `coalesce(
+            array_agg(${tags.tag})
+            filter (where ${tags.id} is not null),
+            '{}'
+            )`
+    })
     .from(posts)
+    .leftJoin(tagsJoin, eq(posts.id, tagsJoin.postId))
+    .leftJoin(tags, eq(tagsJoin.tagId, tags.id))
     .where(eq(posts.featured, true))
+    .groupBy(posts.id)
     .orderBy(desc(posts.createdAt))
-    return featured
+    return featured as Post[]
 }
 
-
-
-export async function getPostsView(type: "featured" | "published" | "unpublished") {
-    const postsView = await db.select()
-    .from(posts)
-    .orderBy(desc(posts.createdAt))
-
-    return postsView
-}
 
 export async function alreadyPublished(slug: string) {
     const check = await db.select({publishedAt: posts.publishedAt})

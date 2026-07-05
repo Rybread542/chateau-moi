@@ -30,7 +30,7 @@ const config: Record<AdminAction, {
     description: (p) => `You are about to nuke “${p.title}” from the db.`,
     confirmLabel: "Delete", 
     destructive: true,
-    run: async (p) => await deletePost(p.slug),
+    run: async (p) => await deletePost(p.id),
   },
   publish: {
     title: (p) => (p.published ? "Unpublish this post?" : "Publish this post?"),

@@ -3,6 +3,7 @@ import Image from "next/image";
 import { getPostBySlug } from "@/db/posts";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import { Post } from "@/lib/utils";
 
 interface PageProps {
   params: Promise<{
@@ -13,14 +14,11 @@ interface PageProps {
 export default async function BlogPost({params} : PageProps) {
 
   const { slug } = await params
-  const postInfo = await getPostBySlug(slug)
-  const post = postInfo[0]
+  const post : Post = await getPostBySlug(slug)
+  .then(data => data[0])
 
   return (
     <>
-      <header className="text-xl my-4 mx-5">
-        <Link href="/blog">Ryan Bread's Blog</Link>
-      </header>
       <div className="mx-auto my-5">
           <Image src={'/default.png'} alt="yeah" width={500} height={500}></Image>
       </div>

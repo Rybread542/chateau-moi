@@ -7,15 +7,9 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
+import { PublishedPost } from "@/lib/utils";
 
-interface FeaturedProps {
-    slug: string;
-    title: string;
-    publishedAt: Date | null;
-    description: string;
-}
-
-export default function FeaturedPost(post: FeaturedProps) {
+export default function FeaturedPost({ post } : { post: PublishedPost }) {
 
     return(
         <Item variant={'outline'} className="w-full" asChild>

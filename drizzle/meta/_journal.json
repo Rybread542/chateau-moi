@@ -36,6 +36,20 @@
       "when": 1782784257471,
       "tag": "0004_flashy_sabra",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1782926798089,
+      "tag": "0005_silent_vivisector",
+      "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1782927006753,
+      "tag": "0006_green_tarot",
+      "breakpoints": true
     }
   ]
 }

@@ -29,7 +29,7 @@ export default function Home() {
         </div>
         <div className="flex container mx-auto justify-evenly">
             <NavButton text="Blog" navTo="/blog"></NavButton>
-            <NavButton text="Tools" navTo="/tools"></NavButton>
+            <NavButton text="Projects" navTo="/projects"></NavButton>
             <NavButton text="Employers" navTo="/resume"></NavButton>
         </div>
       </main>

@@ -3,24 +3,24 @@ import { auth } from '@/lib/auth'
 import { getAllPosts, getPublishedPostsView, getUnpublishedPostsView } from '@/db/posts'
 import { getFeaturedPostsView } from "@/db/posts";
 import BlogPostManager from '@/components/blog-post-manager';
+import { Post } from '@/lib/utils';
 
 
 export default async function AdminPage({ searchParams }: { searchParams: Promise<{ view?: string }> }) {
-  const unwrappedParams = await searchParams
-  const view = unwrappedParams.view ?? "all"
-  const posts =
-    view === "unpublished" ? await getUnpublishedPostsView()
-    : view === "published" ? await getPublishedPostsView()
-    : view === "featured"  ? await getFeaturedPostsView()
-    : await getAllPosts();
+
   const session = await auth()
   
   if (!session) {
     redirect('/login')
   }
 
-  
-
+  const unwrappedParams = await searchParams
+  const view = unwrappedParams.view ?? "all"
+  const posts: Post[] =
+    view === "unpublished" ? await getUnpublishedPostsView()
+    : view === "published" ? await getPublishedPostsView()
+    : view === "featured"  ? await getFeaturedPostsView()
+    : await getAllPosts()
 
   return(
     <div className="flex flex-1 flex-col gap-4 p-6">
@@ -30,8 +30,7 @@ export default async function AdminPage({ searchParams }: { searchParams: Promis
             <div className="aspect-video rounded-xl bg-muted/50" />
           </div>
 
-
-         <BlogPostManager posts={posts}/>
+         <BlogPostManager posts={posts} />
     </div>
   
   )

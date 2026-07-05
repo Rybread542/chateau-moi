@@ -1,6 +1,6 @@
 "use client"
 import BlogListItem from "./blog-list-item";
-import type { AdminPost } from "@/lib/utils";
+import type { Post } from "@/lib/utils";
 import { ToggleGroup, ToggleGroupItem } from "./ui/toggle-group";
 import { CircleX, CircleCheck, Star, Plus } from "lucide-react";
 import { useState, useTransition } from "react";
@@ -12,7 +12,7 @@ import Link from "next/link";
 
 type ViewType = "published" | "unpublished" | "featured" | undefined
 
-export default function BlogPostManager({ posts } : { posts: Array<AdminPost> } ) {
+export default function BlogPostManager({ posts } : { posts: Array<Post> } ) {
 
     const router = useRouter()
     const searchParams = useSearchParams()
@@ -25,13 +25,13 @@ export default function BlogPostManager({ posts } : { posts: Array<AdminPost> } 
         
         post.title.toLowerCase().includes(queryNormal) 
         || 
-        post.tags.some((tag) => tag.toLowerCase().includes(queryNormal))
+        post.tags.some((tag) => tag.toLowerCase().startsWith(queryNormal))
         )
     )
     
     const empty = filtered.length === 0
 
-    const handleViewChange = async (type: string, query: string) => {
+    const handleViewChange = async (type: string) => {
         startTransition(() => {
             router.replace(`?view=${type}`, {scroll: false})
         })
@@ -53,7 +53,7 @@ export default function BlogPostManager({ posts } : { posts: Array<AdminPost> } 
                         <Input placeholder="Search it up..." className="rounded-xl h-full" onChange={(e) => setQuery(e.target.value)}/>
                     </div>
                     <div className="col-start-4 col-end-6 rounded-xl bg-muted/50 p-1">
-                        <ToggleGroup className="w-full" type="single" variant={'outline'} value={view} onValueChange={(v) => handleViewChange(v, '')}>
+                        <ToggleGroup className="w-full" type="single" variant={'outline'} value={view} onValueChange={(v) => handleViewChange(v)}>
                             <ToggleGroupItem value="published" className="flex-1 data-[state=on]:bg-emerald-200 rounded-xl">
                                 <CircleCheck />
                                 Published
@@ -76,7 +76,7 @@ export default function BlogPostManager({ posts } : { posts: Array<AdminPost> } 
                 {!isPending && 
                 filtered.map(post => (
                 <div key={post.slug} className="flex">
-                    <BlogListItem {...post} variant='admin'></BlogListItem>
+                    <BlogListItem post={post} activeTag="" admin></BlogListItem>
                 </div>
                 ))}
                 {isPending &&

@@ -12,26 +12,15 @@ import {
 import AdminDropdown from "./blog-list-item-admin-dropdown";
 import { PostAdminInfo } from "./blog-list-item-admin-info";
 import { Badge } from "./ui/badge";
-import type { AdminPost } from "@/lib/utils";
+import type { Post, PublishedPost } from "@/lib/utils";
 import {CircleX, CircleCheck, Star } from "lucide-react";
+import TagBox from "./tag-box";
 
-type AdminView = AdminPost
+type PostProps = Post | PublishedPost
 
-type ListView = {
-    variant: 'list';
-    slug: string;
-    title: string;
-    excerpt: string | null;
-    featured: boolean;
-    description: string;
-    publishedAt: Date | null;
-}
+export default function BlogListItem({post, activeTag, admin} : { post: PostProps; activeTag: string; admin: boolean}) {
 
-type PostProps = AdminView | ListView
-
-export default function BlogListItem(post: PostProps) {
-
-    const link = post.variant === 'list' ? `/blog/${post.slug}` : '#'
+    const link = `/blog/${post.slug}`
 
     return(
         <Item variant={'outline'} className="h-full w-full gap-8">
@@ -50,8 +39,12 @@ export default function BlogListItem(post: PostProps) {
                     <ItemDescription>
                         {post.publishedAt ? post.publishedAt.toLocaleDateString() : "Unpublished"}
                     </ItemDescription>
+                    <TagBox tags={post.tags} activeTag={activeTag}/>
                 </ItemContent>
-                {post.variant === 'admin' &&    
+
+                
+
+                {admin &&   
                 <>
                 <div className="flex flex-col gap-1">
                     {post.featured && 

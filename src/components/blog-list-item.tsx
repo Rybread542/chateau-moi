@@ -23,56 +23,59 @@ export default function BlogListItem({post, activeTag, admin} : { post: PostProp
     const link = `/blog/${post.slug}`
 
     return(
-        <Item variant={'outline'} className="h-full w-full gap-8">
-                <ItemMedia variant={'image'}>
-                    <Image src={'/default.png'} alt="yes" fill className=""></Image>
-                </ItemMedia>
-                <ItemContent>
-                    <ItemTitle>
-                        <Link href={link}>
-                            {post.title}
-                        </Link>
-                    </ItemTitle>
-                    <ItemDescription>
-                        {post.description}
-                    </ItemDescription>
+        <Item variant={'default'} className="w-full items-stretch gap-8">
+            <ItemMedia variant={'image'} className="relative size-40 aspect-square shrink-0 overflow-hidden rounded-sm">
+                <Image src={'/default.png'} alt="yes" fill className="object-cover"></Image>
+            </ItemMedia>
+            <ItemContent className="min-w-0">
+                <ItemTitle className="w-full shrink-0 text-xl font-bold">
+                    <Link href={link}>
+                        {post.title}
+                    </Link>
+                </ItemTitle>
+                <ItemDescription className="line-clamp-3">
+                    {post.description}
+                </ItemDescription>
+
+                <div className="flex flex-col gap-1">
                     <ItemDescription>
                         {post.publishedAt ? post.publishedAt.toLocaleDateString() : "Unpublished"}
                     </ItemDescription>
                     <TagBox tags={post.tags} activeTag={activeTag}/>
-                </ItemContent>
-
-                
-
-                {admin &&   
-                <>
-                <div className="flex flex-col gap-1">
-                    {post.featured && 
-                        <Badge variant={'outline'} className="bg-indigo-200 w-full">
-                            <Star data-icon="inline-start"/>
-                            Featured
-                        </Badge>}
-
-                    {post.published && 
-                        <Badge variant={'outline'} className="bg-emerald-200 w-full">
-                            <CircleCheck data-icon="inline-start"/>
-                            Published
-                        </Badge>}
-
-                    {!post.published && 
-                        <Badge variant={'outline'} className="bg-red-200 w-full">
-                            <CircleX data-icon="inline-start"/>
-                            Unpublished
-                        </Badge>} 
                 </div>
+            </ItemContent>
 
-                    <PostAdminInfo post={post} />
-                    <ItemActions>
-                        <AdminDropdown post={post} />
-                    </ItemActions>
-                </>
-                    
-                }
+            
+
+            {admin &&   
+            <>
+            <div className="flex flex-col gap-1">
+                {post.featured && 
+                    <Badge variant={'outline'} className="bg-indigo-200 w-full">
+                        <Star data-icon="inline-start"/>
+                        Featured
+                    </Badge>}
+
+                {post.published && 
+                    <Badge variant={'outline'} className="bg-emerald-200 w-full">
+                        <CircleCheck data-icon="inline-start"/>
+                        Published
+                    </Badge>}
+
+                {!post.published && 
+                    <Badge variant={'outline'} className="bg-red-200 w-full">
+                        <CircleX data-icon="inline-start"/>
+                        Unpublished
+                    </Badge>} 
+            </div>
+
+                <PostAdminInfo post={post} />
+                <ItemActions>
+                    <AdminDropdown post={post} />
+                </ItemActions>
+            </>
+                
+            }
         </Item>
     )
 }

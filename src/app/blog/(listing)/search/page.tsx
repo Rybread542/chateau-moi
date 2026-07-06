@@ -1,13 +1,10 @@
 import 'dotenv/config';
 import BlogListView from '@/components/blog-list-view';
 import { getPostsByTag, getSearchPostsPage, getTagCounts, getTagPostsPage, searchPosts } from '@/db/posts';
-import { Suspense } from 'react';
-import BlogSearchBar from '@/components/blog-search-bar';
-import TagSort from '@/components/tag-sort';
-import { PublishedPost, TagsCount } from '@/lib/utils';
 import { redirect } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { Paginate } from '@/components/paginate';
+import BlogSearchControls from '@/components/blog-list-search-controls';
 
 
 
@@ -32,10 +29,6 @@ export default async function BlogSearch({
 
   const totalPages = Math.ceil(total / perPage)
 
- 
-
-  const tagCounts: TagsCount = await getTagCounts()
-
   if ((!query && !tag) || (query && tag)) {
     redirect('/blog')
   }
@@ -51,12 +44,8 @@ export default async function BlogSearch({
           <>Posts tagged <Badge variant="default">{params.tag}</Badge></>
           }
           </div>
-          <div className="flex">
-              <Suspense>
-                  <BlogSearchBar />
-                  <TagSort tagCounts={tagCounts}/>
-              </Suspense>
-          </div>
+          <BlogSearchControls />
+
           <div className="flex items-center mx-auto flex-1">
             <div>I got nothing.</div>
           </div>
@@ -76,12 +65,9 @@ export default async function BlogSearch({
           <>Posts tagged <Badge variant="default">{params.tag}</Badge></>
           }
         </div>
-        <div className="flex">
-            <Suspense>
-                <BlogSearchBar />
-                <TagSort tagCounts={tagCounts}/>
-            </Suspense>
-        </div>
+
+          <BlogSearchControls />
+
         <BlogListView posts={posts} activeTag={tag} displayFeatured={false}/>
         <Paginate totalPages={totalPages} currPage={page} searchParams={params} mode='search'/>
     </main>

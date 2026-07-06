@@ -4,6 +4,7 @@ import {
   Item,
   ItemContent,
   ItemDescription,
+  ItemHeader,
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
@@ -12,24 +13,26 @@ import { PublishedPost } from "@/lib/utils";
 export default function FeaturedPost({ post } : { post: PublishedPost }) {
 
     return(
-        <Item variant={'outline'} className="w-full" asChild>
-            <Link href={`/blog/${post.slug}`}>
-                <ItemMedia variant={'image'} className="size-20 sm:size-30 md:size-50 lg:size-80 aspect-square">
-                    <Image src={'/default.png'} alt="yes" fill></Image>
+        <Item className="w-full">
+            <div className="text-[10px]">Check this one out</div>
+            <ItemHeader>
+                <ItemMedia variant={'image'} className="relative h-60 w-full rounded-sm">
+                    <Image src={'/default.png'} alt="yes" fill className="object-cover"></Image>
                 </ItemMedia>
-                <ItemContent>
-                    <ItemTitle className="sm:text-2xl md:text-3xl lg:text-4xl">
+            </ItemHeader>
+            <ItemContent>
+                <ItemTitle className="sm:text-2xl md:text-3xl lg:text-4xl">
+                    <Link href={`/blog/${post.slug}`}>
                         {post.title}
-                    </ItemTitle>
-                    
-                    <ItemDescription className="sm:text-sm md:text-md lg:text-lg">
-                        {post.publishedAt!.toLocaleDateString()}
-                    </ItemDescription>
-                    <ItemDescription className="line-clamp-none">
-                        {post.description}
-                    </ItemDescription>
-                </ItemContent>
-            </Link>
+                    </Link>
+                </ItemTitle>
+                <ItemDescription className="line-clamp-none text-lg">
+                    {post.description}
+                </ItemDescription>
+                <ItemDescription className="text-sm">
+                    {post.publishedAt!.toLocaleDateString()}
+                </ItemDescription>
+            </ItemContent>
         </Item>
     )
 }

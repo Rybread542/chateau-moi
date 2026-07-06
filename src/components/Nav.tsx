@@ -1,36 +1,52 @@
-"use client"
-import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { Button } from '@/components/ui/button'
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuTrigger
+} from '@/components/ui/dropdown-menu'
+import { ChevronDown } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
 
-export default function Nav() {
-    const LINKS = [
-        {
-            href: "/",
-            label: "Home"
-        },
-        {
-            href: "/blog",
-            label: "Blog"
-        },
-        {
-            href: "/tools",
-            label: "Tools"
-        },
-    ]
+const listItems = [
+  {
+    label : 'Home',
+    navTo : '/'
+  },
+  {
+    label : 'Blog',
+    navTo : '/blog'
+  },
+  {
+    label : 'Projects',
+    navTo : '/projects'
+  },
+  
+]
 
-    const path = usePathname()
-
-    if (path !== '/' && !path.startsWith('/admin')){
-        return (
-
-            <nav className="fixed">
-                {LINKS.map(link => (
-                    <Link key={link.href} href={link.href}>
-                        {link.label}
-                    </Link>
-                ))}
-
-            </nav>
-        )
-    }
+export default function navMenu() {
+  return (
+    <div className="p-2 fixed">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant='ghost' size='icon' className='rounded-sm p-2 size-12'>
+              <Image src={'/bread.svg'} alt='nav' width={40} height={40}/>
+              <ChevronDown className='size-3'/>
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent className='w-24'>
+            <DropdownMenuGroup>
+              {listItems.map((item) => (
+                <DropdownMenuItem key={item.label} className='*:[svg]:text-muted-foreground' asChild>
+                  <Link href={item.navTo} className='text-popover-foreground'>{item.label}</Link>
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuGroup>
+          </DropdownMenuContent>
+        </DropdownMenu>
+    </div>
+  )
 }
+

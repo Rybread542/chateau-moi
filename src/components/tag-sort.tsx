@@ -25,20 +25,20 @@ export default function TagSort({ tagCounts }: { tagCounts: TagsCount }) {
     
     return(
         <Select value={currentTag} onValueChange={handleTagSelect}>
-            <SelectTrigger>
+            <SelectTrigger className="rounded-sm">
                 <SelectValue placeholder="Search by tag..." />
             </SelectTrigger>
-                <SelectContent position="popper" side="bottom">
-                    <ScrollArea className="h-48">
-                        <SelectGroup>
-                        {tagCounts.map(tag => (
-                            <SelectItem key={tag.tag} value={tag.tag}>
-                            <Badge variant="outline">{tag.tag} {tag.count}</Badge>
-                            </SelectItem>
-                        ))}
-                        </SelectGroup>
-                    </ScrollArea>
-                </SelectContent>
+            <SelectContent position="popper" side="bottom">
+                <ScrollArea className="h-48">
+                    <SelectGroup>
+                    {tagCounts.map(tag => (
+                        <SelectItem key={tag.tag} value={tag.tag}>
+                        <Badge className="rounded-xl" variant={currentTag === tag.tag ? 'default' : 'outline'}>{tag.tag} {tag.count}</Badge>
+                        </SelectItem>
+                    ))}
+                    </SelectGroup>
+                </ScrollArea>
+            </SelectContent>
         </Select>
         
     )

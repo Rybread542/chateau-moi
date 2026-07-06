@@ -4,6 +4,10 @@ import { useEffect, useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import { Search } from "lucide-react";
+import { InputGroup, 
+  InputGroupAddon, 
+  InputGroupButton, 
+  InputGroupInput } from "./ui/input-group";
 
 export default function BlogSearchBar() {
 
@@ -25,21 +29,18 @@ export default function BlogSearchBar() {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2">
-      <Input
-        type="text"
-        name="query"
-        value={query}
-        onChange={(e) => setQuery(e.target.value)}
-        placeholder="Search it up..."
-        className="border p-2 rounded w-64"
-      />
-      <Button
-        type="submit" 
-        className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-      >
-        <Search />
-      </Button>
+
+    <form onSubmit={handleSubmit}>
+      <InputGroup className="rounded-xl">
+        <InputGroupInput
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          placeholder="Search it up..."
+        />
+        <InputGroupAddon align="inline-end">
+          <InputGroupButton variant="secondary" type="submit" className="rounded-lg"><Search /></InputGroupButton>
+        </InputGroupAddon>
+      </InputGroup>
     </form>
   )
 }

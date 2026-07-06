@@ -6,6 +6,7 @@ import BlogSearchBar from '@/components/blog-search-bar';
 import TagSort from '@/components/tag-sort';
 import { PublishedPost, TagsCount } from '@/lib/utils';
 import { Paginate } from '@/components/paginate';
+import BlogSearchControls from '@/components/blog-list-search-controls';
 
 
 export default async function Blog({
@@ -21,7 +22,6 @@ export default async function Blog({
 
     const {posts, total} = await getPostsPage(page, perPage)
     const totalPages = Math.ceil(total / perPage)
-    const tagCounts: TagsCount = await getTagCounts()
 
     if (posts.length < 1) {
         return (
@@ -32,14 +32,11 @@ export default async function Blog({
     }
     
     return (
-        <main className="flex flex-col grow px-4 py-12">
-            <div className="mx-auto text-3xl mb-4">Blog</div>
-            <div className="flex">
-                <Suspense>
-                    <BlogSearchBar />
-                    <TagSort tagCounts={tagCounts}/>
-                </Suspense>
-            </div>
+        <main className="flex flex-col grow px-18 py-16">
+            <div className="text-3xl mb-4">Blog</div>
+
+                <BlogSearchControls />
+
             <BlogListView posts={posts} activeTag='' displayFeatured={displayFeatured}/>
             <Paginate totalPages={totalPages} currPage={page} searchParams={params} mode='index'/>
         </main>

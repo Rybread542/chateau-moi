@@ -37,50 +37,46 @@ export default function BlogPostManager({ posts } : { posts: Array<Post> } ) {
         })
 
     }
-    
 
     return(
         <>
-            <div className="flex flex-col gap-1">
-                <div className="grid grid-cols-5 grid-rows-1 gap-2">
+            <div className="flex items-center gap-2">
+                <div className="flex flex-1 items-center gap-1 justify-between rounded-lg bg-muted/50 p-1">
                     
-                    <div className="flex items-center col-start-1 col-end-4 rounded-xl bg-muted/50">
-                        <Button variant={'default'} className="bg-primary rounded-xl p-1.5 m-1" asChild>
+                    <div className="flex items-center flex-1 col-start-1 col-end-4 rounded-xl bg-muted/50 gap-2">
+                        <Button variant={'default'} size={'icon'} className="rounded-md" asChild>
                             <Link href="/admin/new" title="new post">
                                 <Plus/>
                             </Link>
                         </Button>
-                        <Input placeholder="Search it up..." className="rounded-xl h-full" onChange={(e) => setQuery(e.target.value)}/>
+                        <Input placeholder="Search it up..." className="h-9 rounded-md border-0 bg-transparent shadow-none" onChange={(e) => setQuery(e.target.value)}/>
                     </div>
-                    <div className="col-start-4 col-end-6 rounded-xl bg-muted/50 p-1">
-                        <ToggleGroup className="w-full" type="single" variant={'outline'} value={view} onValueChange={(v) => handleViewChange(v)}>
-                            <ToggleGroupItem value="published" className="flex-1 data-[state=on]:bg-emerald-200 rounded-xl">
+    
+                        <ToggleGroup className="rounded-lg bg-muted/50 p-1" type="single" variant={'outline'} value={view} onValueChange={(v) => handleViewChange(v)}>
+                            <ToggleGroupItem value="published" className="flex-1 hover:bg-emerald-600/40 data-[state=on]:bg-emerald-600/40 rounded-xl border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                                 <CircleCheck />
                                 Published
                             </ToggleGroupItem>
-                            <ToggleGroupItem value="unpublished" className="flex-1 data-[state=on]:bg-red-200 rounded-xl">
+                            <ToggleGroupItem value="unpublished" className="flex-1 hover:bg-red-500/40 data-[state=on]:bg-red-500/40 rounded-xl border-red-500/30 bg-red-500/10 text-red-600 dark:text-red-400">
                                 <CircleX />
                                 Unpublished
                             </ToggleGroupItem>
-                            <ToggleGroupItem value="featured" className="flex-1 data-[state=on]:bg-indigo-200 rounded-xl">
+                            <ToggleGroupItem value="featured" className="flex-1 hover:bg-indigo-500/40 data-[state=on]:bg-indigo-500/40 rounded-xl border-indigo-500/30 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
                                 <Star />
                                 Featured
                             </ToggleGroupItem>
                         </ToggleGroup>
-                        
-                    </div>
+               
                 </div>
             </div>
                 
             <div className="flex grow flex-col items-start gap-4 overflow-y-auto rounded-xl bg-muted/50 p-2">
                 {!isPending && 
                 filtered.map(post => (
-                <div key={post.slug} className="flex">
-                    <BlogListItem post={post} activeTag="" admin></BlogListItem>
-                </div>
+                    <BlogListItem key={post.slug} post={post} activeTag="" admin></BlogListItem>
                 ))}
                 {isPending &&
-                 <BlogPostSkeleton />
+                    <BlogPostSkeleton />
                 }
                 {!isPending && empty &&
                     <div className="flex text-lg mt-20 self-center">I got nothing.</div>

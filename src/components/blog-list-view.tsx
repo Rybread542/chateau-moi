@@ -13,19 +13,19 @@ export default async function BlogListView({posts, activeTag, displayFeatured}
     const featuredPost = await getFeaturedPost()
 
     return(
-        <div className="flex items-start gap-2">
-            <div className="flex basis-2/3 flex-col gap-6 min-w-0">
+        <div className="grid gap-10 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)]">
+            <div className="flex min-w-0 flex-col divide-y divide-border">
                 {posts.map(post => (
                 <BlogListItem key={post.slug} post={post} activeTag={activeTag} admin={false} /> 
                 ))}
             </div>
 
         {displayFeatured &&
-            <div className="basis-1/3">
-                <div className="md:col-span-2 min-w-0">
+            <aside className="basis-1/3">
+                <div className="order-first min-w-0 lg:order-none lg:top-10 lg:self-start">
                     <FeaturedPost post={featuredPost}></FeaturedPost>
                 </div>
-            </div>
+            </aside>
         }
         </div>
     )

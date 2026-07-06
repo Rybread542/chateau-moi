@@ -32,7 +32,7 @@ export default function navMenu() {
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant='ghost' size='icon' className='rounded-sm p-2 size-12'>
-              <Image src={'/bread.svg'} alt='nav' width={40} height={40}/>
+              <Image src={'/bread.svg'} alt='nav' width={40} height={40} className='invert'/>
               <ChevronDown className='size-3'/>
             </Button>
           </DropdownMenuTrigger>

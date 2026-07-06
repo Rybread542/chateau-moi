@@ -1,10 +1,11 @@
 import 'dotenv/config';
 import BlogListView from '@/components/blog-list-view';
-import { getPostsByTag, getSearchPostsPage, getTagCounts, getTagPostsPage, searchPosts } from '@/db/posts';
+import { getSearchPostsPage, getTagPostsPage } from '@/db/posts';
 import { redirect } from 'next/navigation';
 import { Badge } from '@/components/ui/badge';
 import { Paginate } from '@/components/paginate';
 import BlogSearchControls from '@/components/blog-list-search-controls';
+import MainShell from '@/components/main-shell';
 
 
 
@@ -34,30 +35,29 @@ export default async function BlogSearch({
   }
 
   if (posts.length < 1) {
-        return (
+    return (
 
-        <main className="flex flex-col grow px-4 py-12">
-          <div className="mx-auto mb-4">
-          {query ?
-          <>Results for <span className='font-mono bg-muted/50 p-1'>{query}</span></>
-          :
-          <>Posts tagged <Badge variant="default">{params.tag}</Badge></>
-          }
-          </div>
-          <BlogSearchControls />
-
-          <div className="flex items-center mx-auto flex-1">
-            <div>I got nothing.</div>
-          </div>
-      </main>
+      <MainShell>
+        <div className="mx-auto mb-4">
+        {query ?
+        <>Results for <span className='font-mono bg-muted/50 p-1'>{query}</span></>
+        :
+        <>Posts tagged <Badge variant="default">{params.tag}</Badge></>
+        }
+        </div>
+        <BlogSearchControls />
+        <div className="flex items-center mx-auto flex-1">
+          <div>I got nothing.</div>
+        </div>
+      </MainShell>
         
-        )
-    }
+      )
+  }
 
 
   
   return (
-    <main className="flex flex-col grow px-4 py-12">
+    <MainShell>
         <div className="mx-auto mb-4">
           {query ?
           <>Results for <span className='font-mono bg-muted/50 p-1'>{query}</span></>
@@ -70,6 +70,6 @@ export default async function BlogSearch({
 
         <BlogListView posts={posts} activeTag={tag} displayFeatured={false}/>
         <Paginate totalPages={totalPages} currPage={page} searchParams={params} mode='search'/>
-    </main>
+    </MainShell>
   )
 }

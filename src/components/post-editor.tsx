@@ -2,7 +2,7 @@
 
 import dynamic from 'next/dynamic'
 import '@uiw/react-md-editor/markdown-editor.css' 
-import { AdminPost } from '@/lib/utils'
+import { Post } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { Field, FieldLabel } from './ui/field'
@@ -31,7 +31,7 @@ import { Label } from './ui/label'
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false })
 
 
-export default function PostEditor({ post } : { post?: AdminPost }) {
+export default function PostEditor({ post } : { post?: Post }) {
 
     const [title, setTitle] = useState(post?.title ?? "")
     const [slug, setSlug] = useState(post?.slug ?? "")
@@ -119,10 +119,8 @@ export default function PostEditor({ post } : { post?: AdminPost }) {
     const formComplete = Boolean(title.trim() && description.trim() && body.trim())
 
     return(
-        <div className="flex flex-1 flex-col gap-4 p-6">
-            
-            <div className="flex">
-                <div className="flex flex-col">
+        <div className="grid flex-1 content-start gap-x-8 gap-y-6 p-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] overflow-y-scroll">
+                <div className="flex flex-col gap-3">
                     <Field>
                         <FieldLabel htmlFor="title">
                             Title
@@ -130,38 +128,6 @@ export default function PostEditor({ post } : { post?: AdminPost }) {
                         <Input value={title} onChange={(e) => handleTitleChange(e.target.value)} id="title" placeholder="All your fans will surely love this one" />
                     </Field>
 
-                </div>
-
-                <div className="flex flex-col">
-                    <div className="flex flex-wrap">
-                        {tags.length > 0 ? 
-                        tags.map(tag => (
-                          <Badge key={tag} variant={'outline'} className='rounded-sm px-2 py-3'>
-                            {tag}
-                            <button onClick={() => handleTagDelete(tag)} >
-                                <X size={12}/>
-                            </button>
-                            
-                          </Badge>
-                            
-                        ))
-                        :
-                        ''
-                        }
-                        
-                    </div>
-                    <div className='flex'>
-                        <Label htmlFor='tags'>Tags</Label>
-                        <Input id='tags' value={currentTag} onChange={(e) => handleCurrTagChange(e.target.value)}></Input>
-                        <Button onClick={handleTagAdd}><Plus/></Button>
-                    </div>
-                </div>
-
-            </div>
-
-            <div className="flex">
-
-                <div className="flex">
                     <Field>
                         <FieldLabel htmlFor="description">
                             Description
@@ -175,40 +141,61 @@ export default function PostEditor({ post } : { post?: AdminPost }) {
                         </FieldLabel>
                         <Textarea value={excerpt} onChange={(e) => setExcerpt(e.target.value)} id="excerpt" placeholder="Optional." />
                     </Field>
+
                 </div>
 
-                <div className="flex flex-col">
+                <div className="flex flex-col gap-5">
+                    <Field>
+                        <FieldLabel htmlFor="slug">
+                            Slug
+                        </FieldLabel>
+                        <Input value={slug} disabled={mode === 'edit'} onChange={(e) => handleSlugChange(e.target.value)} id="slug" placeholder="must-be-unique" />
+                    </Field>
                     <div className="flex flex-1">
-                        <Toggle pressed={published} onClick={handlePublishChange} className="data-[state=on]:bg-emerald-200 data-[state=off]:bg-red-200 rounded-xl">
+                        <Toggle pressed={published} onClick={handlePublishChange} className="data-[state=on]:bg-emerald-600/40 rounded-xl border-red-500/30 bg-red-500/10 rounded-xl">
                             {published ? <CircleCheck /> : <CircleX />}
                             Publish?
                         </Toggle>
-                        <Toggle pressed={featured && published} disabled={!published} onClick={handleFeatureChange} className="data-[state=on]:bg-indigo-200 rounded-xl">
+                        <Toggle pressed={featured && published} disabled={!published} onClick={handleFeatureChange} className="data-[state=on]:bg-indigo-500/40 rounded-xl border-indigo-500/30 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
                             <Star />
                             Feature?
                         </Toggle>
-
                     </div>
 
-                    <div className="flex">
-                        <Field>
-                            <FieldLabel htmlFor="slug">
-                                Slug
-                            </FieldLabel>
-                            <Input value={slug} disabled={mode === 'edit'} onChange={(e) => handleSlugChange(e.target.value)} id="slug" placeholder="must-be-unique" />
-                        </Field>
+                    <div className="flex flex-col gap-2">
+                        <div className="flex flex-wrap bg-muted p-2 rounded-lg">
+                            {tags.length > 0 ? 
+                            tags.map(tag => (
+                            <Badge key={tag} variant={'outline'} className='rounded-sm px-2 py-3'>
+                                {tag}
+                                <button className="rounded-full p-0.5 hover:bg-muted"onClick={() => handleTagDelete(tag)} >
+                                    <X className="rounded-full p-0.5 hover:bg-muted" size={12}/>
+                                </button>
+                            </Badge>
+                                
+                            ))
+                            :
+                            ''
+                            }
+                            
+                        </div>
+                        <div className='flex gap-2'>
+                            <Label htmlFor='tags'>
+                                Tags
+                            </Label>
+                            <Input id='tags' value={currentTag} onChange={(e) => handleCurrTagChange(e.target.value)}></Input>
+                            <Button onClick={handleTagAdd}><Plus/></Button>
+                        </div>
                     </div>
                 </div>
 
+            <div className="lg:col-span-2">
+                 <MDEditor value={body} onChange={(value) => setBody(value ?? "")} height={420} />
             </div>
-
-            <div className="flex">
-                 <MDEditor value={body} onChange={(value) => setBody(value ?? "")} height={400} />
-            </div>
-            <div className="flex">
+            <div className="flex justify-end gap-3 lg:col-span-2">
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
-                        <Button>
+                        <Button variant={'ghost'}>
                             Cancel
                         </Button>
                     </AlertDialogTrigger>

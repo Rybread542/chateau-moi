@@ -6,7 +6,7 @@ import { eq, or, desc, count, sql, and, inArray, getTableColumns, arrayContains,
 import { revalidatePath } from 'next/cache';
 import { PublishedPost, Post } from '@/lib/utils';
 
-type NewPost = {
+type ClientPost = {
     slug: string;
     title: string;
     body:string;
@@ -16,6 +16,7 @@ type NewPost = {
     featured: boolean;
     tags: string[];
 }
+
 
 async function setTags(id: string, tagsArr: string[]) {
     await db.transaction(async (tx) => {
@@ -55,7 +56,7 @@ export async function getTagCounts() {
 }
 
 
-export async function createPost(data: NewPost) {
+export async function createPost(data: ClientPost) {
     console.log('inserting post...')
 
     const [newPostId] = await db
@@ -83,7 +84,7 @@ export async function getPostBySlug(slug: string) {
     .where(eq(posts.slug, slug))
     .limit(1)
 
-    return post as Post[]
+    return post[0] as PublishedPost
 }
 
 export async function getPublishedPosts() {
@@ -335,7 +336,7 @@ export async function getPostsByTag(tag: string) {
 }
 
 
-export async function editPost(post: Post) {
+export async function editPost(post: ClientPost) {
 
     const currPost = await db.select().from(posts).where(eq(posts.slug,post.slug))
     .then((data) => data[0])

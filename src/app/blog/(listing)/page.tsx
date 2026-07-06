@@ -7,6 +7,7 @@ import TagSort from '@/components/tag-sort';
 import { PublishedPost, TagsCount } from '@/lib/utils';
 import { Paginate } from '@/components/paginate';
 import BlogSearchControls from '@/components/blog-list-search-controls';
+import MainShell from '@/components/main-shell';
 
 
 export default async function Blog({
@@ -32,14 +33,15 @@ export default async function Blog({
     }
     
     return (
-        <main className="flex flex-col grow px-18 py-16">
-            <div className="text-3xl mb-4">Blog</div>
-
-                <BlogSearchControls />
-
+        <MainShell>
+            <header className="mb-8 flex flex-col gap-1">
+                <h1 className="text-3xl font-semibold tracking-tight">Blog</h1>
+                <p className="text-sm text-muted-foreground">maybe</p>
+            </header>
+            <BlogSearchControls />
             <BlogListView posts={posts} activeTag='' displayFeatured={displayFeatured}/>
             <Paginate totalPages={totalPages} currPage={page} searchParams={params} mode='index'/>
-        </main>
+        </MainShell>
         
   )
 }

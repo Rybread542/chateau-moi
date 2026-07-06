@@ -1,24 +1,23 @@
-"use client"
+"use client";
 
-import * as React from "react"
+import * as React from "react";
 
-import { NavMain } from "@/components/nav-main"
-import { NavProjects } from "@/components/nav-projects"
+import { NavMain } from "@/components/nav-main";
 import {
   Sidebar,
   SidebarContent,
   SidebarHeader,
   SidebarRail,
   SidebarTrigger,
-} from "@/components/ui/sidebar"
-import { NotebookText, TerminalSquareIcon, BotIcon, BookOpenIcon, Settings2Icon, FrameIcon, PieChartIcon, MapIcon } from "lucide-react"
+} from "@/components/ui/sidebar";
+import { NotebookText } from "lucide-react";
 
-// This is sample data.
+
 const data = {
   navMain: [
     {
       title: "Blog",
-      url: "#",
+      url: "/blog",
       icon: (
         <NotebookText />
       ),
@@ -30,7 +29,7 @@ const data = {
         },
         {
           title: "Unpublished",
-          url: "#",
+          url: "/admin?view=unpublished",
         },
         {
           title: "Reviews",

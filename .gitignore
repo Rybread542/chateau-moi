@@ -26,6 +26,7 @@
 test-db.ts
 fillerposts.ts
 tw.md
+sg.md
 
 # debug
 npm-debug.log*

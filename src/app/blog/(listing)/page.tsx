@@ -34,7 +34,7 @@ export default async function Blog({
     
     return (
         <MainShell>
-            <header className="mb-8 flex flex-col gap-1">
+            <header className="mb-4 flex flex-col gap-1">
                 <h1 className="text-3xl font-semibold tracking-tight">Blog</h1>
                 <p className="text-sm text-muted-foreground">maybe</p>
             </header>

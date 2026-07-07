@@ -70,7 +70,7 @@ export default function BlogPostManager({ posts } : { posts: Array<Post> } ) {
                 </div>
             </div>
                 
-            <div className="flex grow flex-col items-start gap-4 overflow-y-auto rounded-xl bg-muted/50 p-2">
+            <div className="flex min-h-0 grow gap-3 flex-col divide-y divide-border overflow-y-auto rounded-xl border bg-muted/30 px-4">
                 {!isPending && 
                 filtered.map(post => (
                     <BlogListItem key={post.slug} post={post} activeTag="" admin></BlogListItem>

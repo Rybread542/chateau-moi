@@ -36,15 +36,16 @@ export default async function BlogSearch({
 
   if (posts.length < 1) {
     return (
-
       <MainShell>
-        <div className="mx-auto mb-4">
         {query ?
-        <>Results for <span className='font-mono bg-muted/50 p-1'>{query}</span></>
-        :
-        <>Posts tagged <Badge variant="default">{params.tag}</Badge></>
+          <header className="mb-8 flex justify-start">
+            <h1 className="text-3xl font-semibold tracking-tight">Results for <span className='font-mono bg-muted/90 p-2'>{query}</span></h1>
+          </header>
+          :
+          <header className="mb-8 flex justify-start">
+            <h1 className="text-3xl font-semibold tracking-tight">Posts tagged <Badge variant="default" className='text-xl h-full rounded-xl'>{params.tag}</Badge></h1>
+          </header>
         }
-        </div>
         <BlogSearchControls />
         <div className="flex items-center mx-auto flex-1">
           <div>I got nothing.</div>
@@ -58,13 +59,15 @@ export default async function BlogSearch({
   
   return (
     <MainShell>
-        <div className="mx-auto mb-4">
-          {query ?
-          <>Results for <span className='font-mono bg-muted/50 p-1'>{query}</span></>
+        {query ?
+          <header className="mb-8 flex justify-start">
+            <h1 className="text-3xl font-semibold tracking-tight">Results for <span className='font-mono bg-muted/50 p-1'>{query}</span></h1>
+          </header>
           :
-          <>Posts tagged <Badge variant="default">{params.tag}</Badge></>
-          }
-        </div>
+          <header className="mb-8 flex justify-start">
+            <h1 className="text-3xl font-semibold tracking-tight">Posts tagged <Badge variant="default" className='text-xl h-full rounded-full'>{params.tag}</Badge></h1>
+          </header>
+        }
 
           <BlogSearchControls />
 

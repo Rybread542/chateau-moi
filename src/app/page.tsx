@@ -6,7 +6,7 @@ import MainShell from "@/components/main-shell";
 export default function Home() {
   return (
       <MainShell>
-          <div className="flex items-center justify-center mt-12 gap-8 md:flex-row md:gap-14 lg:gap-24">
+          <div className="flex items-center justify-center mt-48 sm:mt-24 gap-8 md:flex-row md:gap-14 lg:gap-24">
             <div className="relative aspect-square w-40 sm:w-56 md:w-72">
                 <Image src={'/profile.png'}
                 alt="hey"
@@ -26,7 +26,7 @@ export default function Home() {
                 </div>
             </div>
           </div>
-          <nav className="flex flex-wrap justify-center sm:gap-8 md:gap-12 lg:gap-14 mt-12">
+          <nav className="flex flex-wrap justify-center flex-col gap-4 md:flex-row sm:gap-8 md:gap-12 lg:gap-14 mt-12">
               <NavButton text="Blog" navTo="/blog"></NavButton>
               <NavButton text="Projects" navTo="/projects"></NavButton>
               <NavButton text="Employers" navTo="/info"></NavButton>

@@ -38,7 +38,7 @@ export default function BlogSearchBar() {
           placeholder="Search it up..."
         />
         <InputGroupAddon align="inline-end">
-          <InputGroupButton variant="secondary" type="submit" className="rounded-lg"><Search /></InputGroupButton>
+          <InputGroupButton variant="default" type="submit" className="rounded-lg"><Search /></InputGroupButton>
         </InputGroupAddon>
       </InputGroup>
     </form>

@@ -23,13 +23,13 @@ export default function BlogListItem({post, activeTag, admin} : { post: PostProp
     const link = `/blog/${post.slug}`
 
     return(
-        <Item className="w-full items-start gap-4 px-0 py-6 sm:gap-6">
+        <Item variant={admin ? 'outline' : 'default'} className="w-full items-start gap-4 px-0 py-6 sm:gap-6">
             <ItemMedia variant={'image'} className="relative size-20 shrink-0 overflow-hidden rounded-lg sm:size-32">
                 <Image src={'/default.png'} alt="yes" fill className="object-cover"></Image>
             </ItemMedia>
             <ItemContent className="min-w-0 gap-2">
                 <ItemTitle className="text-lg font-semibold tracking-tight sm:text-xl">
-                    <Link href={link} className="hover:underline underline-offset-4">
+                    <Link href={link} className="transition-colors hover:text-primary hover:underline underline-offset-4">
                         {post.title}
                     </Link>
                 </ItemTitle>
@@ -70,7 +70,7 @@ export default function BlogListItem({post, activeTag, admin} : { post: PostProp
             </div>
 
                 <PostAdminInfo post={post} />
-                <ItemActions>
+                <ItemActions className="mr-8">
                     <AdminDropdown post={post} />
                 </ItemActions>
             </>

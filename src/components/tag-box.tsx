@@ -11,14 +11,14 @@ export default function TagBox({ tags, activeTag } : { tags: string[], activeTag
         
         <div className="flex flex-wrap items-center gap-1.5">
             {tags.slice(0,3).map(tag => 
-                <Badge key={tag} variant={tag === activeTag ? 'default' : 'outline'}>
+                <Badge className="rounded-xl border-primary/25 bg-primary/10 text-indigo-300" key={tag} variant={tag === activeTag ? 'default' : 'outline'}>
                     {tag}
                 </Badge>
             )}
         {tagLen > 3 &&
             <HoverCard openDelay={100} closeDelay={100}>
                 <HoverCardTrigger asChild>
-                    <Badge variant={'outline'} className="rounded-full"> 
+                    <Badge variant={'outline'} className="rounded-full border-primary/25 bg-primary/30 text-indigo-300"> 
                         {`+${tagLen - 3}`}
                     </Badge>
                 </HoverCardTrigger>
@@ -27,7 +27,7 @@ export default function TagBox({ tags, activeTag } : { tags: string[], activeTag
 
                     <div className="flex flex-wrap gap-2">
                         {tags.slice(3).map(tag => 
-                            <Badge key={tag} variant={'outline'} className="rounded-full">
+                            <Badge key={tag} variant={'outline'} className="rounded-xl border-primary/25 bg-primary/10 text-indigo-300">
                                 {tag}
                             </Badge>
                         )}

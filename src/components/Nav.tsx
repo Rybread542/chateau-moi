@@ -31,7 +31,7 @@ export default function navMenu() {
     <div className="p-2 fixed">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant='ghost' size='icon' className='rounded-sm p-2 size-12'>
+            <Button variant='ghost' size='icon' className='size-12 rounded-sm p-2 transition-colors hover:bg-primary/10'>
               <Image src={'/bread.svg'} alt='nav' width={40} height={40} className='invert'/>
               <ChevronDown className='size-3'/>
             </Button>

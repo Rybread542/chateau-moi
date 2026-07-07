@@ -35,7 +35,12 @@ export default async function BlogPost({params} : PageProps) {
         </p>
       </header>
 
-      <article className="prose prose-zinc dark:prose-invert max-w-none prose-headings:tracking-tight prose-img:rounded-lg">
+      <article className="prose prose-zinc dark:prose-invert max-w-none
+        prose-headings:tracking-tight
+        prose-a:text-primary prose-a:decoration-primary/40 prose-a:underline-offset-4 hover:prose-a:decoration-primary
+        prose-blockquote:border-l-primary/50
+        prose-code:text-indigo-300 prose-pre:bg-muted
+        prose-img:rounded-lg">
         <Markdown remarkPlugins={[remarkGfm]}>{post.body}</Markdown>
       </article>
       

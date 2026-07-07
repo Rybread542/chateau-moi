@@ -10,7 +10,7 @@ interface ButtonProps {
 export default function NavButton({text, navTo}: ButtonProps) {
 
     return(
-        <Button variant={'outline'} size={'lg'} asChild>
+        <Button className="transition-colors hover:border-primary/50 hover:text-primary dark:hover:bg-primary/5" variant={'outline'} size={'lg'} asChild>
             <Link href={navTo}>{text}</Link>
         </Button>
     )

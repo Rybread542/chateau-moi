@@ -1,8 +1,6 @@
 "use client"
 import { useRouter, useSearchParams } from "next/navigation"
 import { useEffect, useState } from "react";
-import { Input } from "./ui/input";
-import { Button } from "./ui/button";
 import { Search } from "lucide-react";
 import { InputGroup, 
   InputGroupAddon, 

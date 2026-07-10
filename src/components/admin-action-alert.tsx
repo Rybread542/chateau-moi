@@ -10,8 +10,8 @@ import {
   AlertDialogHeader, 
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { deletePost, setPublished, setFeatured, getNumPosts } from "@/db/posts"
-import type { AdminPost } from "@/lib/utils"
+import { deletePost } from "@/db/posts"
+import type { Post } from "@/lib/utils"
 import { editPost } from "@/db/posts"
 
 export type AdminAction = "delete" | "publish" | "feature"
@@ -19,11 +19,11 @@ export type AdminAction = "delete" | "publish" | "feature"
 
 
 const config: Record<AdminAction, {
-  title: (p: AdminPost) => string
-  description: (p: AdminPost) => string
+  title: (p: Post) => string
+  description: (p: Post) => string
   confirmLabel: string
   destructive?: boolean
-  run: (p: AdminPost) => Promise<void>
+  run: (p: Post) => Promise<void>
 }> = {
   delete: {
     title: () => "Delete this post?",
@@ -48,7 +48,7 @@ const config: Record<AdminAction, {
   },
 }
 
-type Props = { action: AdminAction | null; post: AdminPost; onClose: () => void }
+type Props = { action: AdminAction | null; post: Post; onClose: () => void }
 
 export default function AdminActionAlert({ action, post, onClose }: Props) {
   const [isPending, startTransition] = useTransition()

@@ -1,13 +1,9 @@
-import 'dotenv/config';
-import { getPostsPage, getPublishedPosts, getTagCounts } from '@/db/posts';
+import { getPostsPage } from '@/db/posts';
 import BlogListView from '@/components/blog-list-view';
-import { Suspense } from 'react';
-import BlogSearchBar from '@/components/blog-search-bar';
-import TagSort from '@/components/tag-sort';
-import { PublishedPost, TagsCount } from '@/lib/utils';
 import { Paginate } from '@/components/paginate';
 import BlogSearchControls from '@/components/blog-list-search-controls';
 import MainShell from '@/components/main-shell';
+import PageHeader from '@/components/page-header';
 
 
 export default async function Blog({
@@ -34,13 +30,10 @@ export default async function Blog({
     
     return (
         <MainShell>
-            <header className="mb-4 flex flex-col gap-1">
-                <h1 className="text-3xl font-semibold tracking-tight">Blog</h1>
-                <p className="text-sm text-muted-foreground">maybe</p>
-            </header>
+            <PageHeader title="Blog" sub="maybe"/>
             <BlogSearchControls />
-            <BlogListView posts={posts} activeTag='' displayFeatured={displayFeatured}/>
-            <Paginate totalPages={totalPages} currPage={page} searchParams={params} mode='index'/>
+            <BlogListView posts={posts} activeTag="" displayFeatured={displayFeatured}/>
+            <Paginate totalPages={totalPages} currPage={page} searchParams={params} mode="index"/>
         </MainShell>
         
   )

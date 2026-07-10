@@ -1,9 +1,8 @@
-import Link from "next/link";
 import Image from "next/image";
 import { getPostBySlug } from "@/db/posts";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { Post, PublishedPost } from "@/lib/utils";
+import { PublishedPost } from "@/lib/utils";
 import MainShell from "@/components/main-shell";
 
 interface PageProps {

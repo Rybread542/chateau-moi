@@ -1,5 +1,4 @@
 'use server';
-import 'dotenv/config';
 import { db } from "./index";
 import { posts, tags, tagsJoin } from "./schema";
 import { eq, or, desc, count, sql, and, inArray, getTableColumns, arrayContains, isNotNull } from 'drizzle-orm';
@@ -34,8 +33,6 @@ async function setTags(id: string, tagsArr: string[]) {
         await tx.insert(tagsJoin)
         .values(tagRows.map((r) => ({ postId: id, tagId: r.id })))
     })
-
-    
 }
 
 
@@ -87,25 +84,6 @@ export async function getPostBySlug(slug: string) {
     return post[0] as PublishedPost
 }
 
-export async function getPublishedPosts() {
-    const publishedPosts = await db.select({
-        ...getTableColumns(posts),
-        tags: sql<string[]>
-        `coalesce(
-            array_agg(${tags.tag})
-            filter (where ${tags.id} is not null),
-            '{}'
-            )`
-    })
-    .from(posts)
-    .leftJoin(tagsJoin, eq(posts.id, tagsJoin.postId))
-    .leftJoin(tags, eq(tagsJoin.tagId, tags.id))
-    .where(eq(posts.published, true))
-    .groupBy(posts.id)
-    .orderBy(desc(posts.publishedAt))
-
-    return publishedPosts as PublishedPost[]
-}
 
 export async function getPostsPage(page: number, perPage: 10) {
 
@@ -265,76 +243,6 @@ export async function getFeaturedPost() {
     return featuredPost[0] as PublishedPost
 }
 
-export async function searchPosts(query: string) {
-    const doc = sql`
-        setweight(to_tsvector('english', coalesce(${posts.title}, '')),       'A') ||
-        setweight(to_tsvector('english', coalesce(${posts.description}, '')), 'B') ||
-        setweight(to_tsvector('english', coalesce(${posts.body}, '')),        'C')
-    `
-    const tsQuery = sql`websearch_to_tsquery('english', ${query})`
-
-
-    const search = await db.select({
-        id: posts.id,
-        slug: posts.slug,
-        title: posts.title,
-        excerpt: posts.excerpt,
-        featured: posts.featured,
-        description: posts.description,
-        publishedAt: posts.publishedAt,
-        tags: sql<string[]>
-        `coalesce(
-            array_agg(${tags.tag})
-            filter (where ${tags.id} is not null),
-            '{}'
-            )`,
-        rank: sql<number>`ts_rank(${doc}, ${tsQuery})`
-    })
-    .from(posts)
-    .leftJoin(tagsJoin, eq(posts.id, tagsJoin.postId))
-    .leftJoin(tags, eq(tagsJoin.tagId, tags.id))
-    .where(and(
-        eq(posts.published, true),
-        isNotNull(posts.publishedAt),
-        sql`${doc} @@ ${tsQuery}`
-    ))
-    .groupBy(posts.id)
-    .orderBy(desc(sql`ts_rank(${doc}, ${tsQuery})`))
-
-    return search 
-}
-
-
-export async function getPostsByTag(tag: string) {
-
-    const search = await db.select({
-        id: posts.id,
-        slug: posts.slug,
-        title: posts.title,
-        excerpt: posts.excerpt,
-        featured: posts.featured,
-        description: posts.description,
-        publishedAt: posts.publishedAt,
-        tags: sql<string[]>
-        `coalesce(
-            array_agg(${tags.tag} order by (${tags.tag} = ${tag}) desc)
-            filter (where ${tags.id} is not null),
-            '{}'
-            )`
-    })
-    .from(posts)
-    .leftJoin(tagsJoin, eq(posts.id, tagsJoin.postId))
-    .leftJoin(tags, eq(tagsJoin.tagId, tags.id))
-    .where(and(
-        eq(posts.published, true),
-        isNotNull(posts.publishedAt)
-        ))
-    .groupBy(posts.id)
-    .having(sql`${tag} = any(array_agg(${tags.tag}))`)
-    .orderBy(desc(posts.publishedAt))
-    return search
-}
-
 
 export async function editPost(post: ClientPost) {
 
@@ -402,11 +310,6 @@ export async function setFeatured(slug: string) {
     await db.update(posts).set({ featured: false })
     await db.update(posts).set({ featured: true }).where(eq(posts.slug, slug))
     revalidatePath('/admin')
-}
-
-export async function getNumPosts() {
-    const rowCount = await db.select({count: count()}).from(posts)
-    return rowCount[0]
 }
 
 export async function getPublishedPostsView() {

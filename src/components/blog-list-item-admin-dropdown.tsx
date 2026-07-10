@@ -7,9 +7,9 @@ import {
 import { ChevronDown, Pause, PencilIcon, Play, Star, TrashIcon } from "lucide-react"
 import Link from "next/link"
 import AdminActionAlert, { type AdminAction } from "./admin-action-alert"
-import type { AdminPost } from "@/lib/utils"
+import type { Post } from "@/lib/utils"
 
-export default function AdminDropdown({ post }: { post: AdminPost }) {
+export default function AdminDropdown({ post }: { post: Post }) {
   const [action, setAction] = useState<AdminAction | null>(null)
 
   return (

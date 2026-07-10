@@ -9,7 +9,7 @@ export default async function EditPostPage({ params }: { params: Promise<{ slug:
   if (!session) redirect("/login")
 
   const { slug } = await params
-  const [post] = await getPostBySlug(slug)
+  const post = await getPostBySlug(slug)
   if (!post) notFound()
 
   return ( 

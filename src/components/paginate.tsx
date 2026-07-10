@@ -1,11 +1,8 @@
 import {
   Pagination,
   PaginationContent,
-  PaginationEllipsis,
   PaginationItem,
   PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
 } from "@/components/ui/pagination"
 import { getPageParams, getPaginateItems } from "@/lib/utils";
 import { FastForward, Rewind, SkipBack, SkipForward } from "lucide-react";
@@ -43,7 +40,7 @@ export function Paginate({ totalPages, currPage, searchParams, mode }
           </PaginationItem>
         }
 
-        {paginateItems.map((item, i) =>
+        {paginateItems.map((item) =>
                 (
                 <PaginationItem key={item}>
                     <PaginationLink className={item === currPage ? "border-primary/40 bg-primary/10 text-indigo-300" : undefined} href={getPageParams(item, searchParams, mode)} isActive={item === currPage}>

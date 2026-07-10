@@ -1,14 +1,13 @@
-import { Button } from "@/components/ui/button"
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
-import type { AdminPost } from "@/lib/utils"
+import type { Post } from "@/lib/utils"
 import { CircleQuestionMark } from "lucide-react"
 
 
-export function PostAdminInfo({ post }: { post: AdminPost }) {
+export function PostAdminInfo({ post }: { post: Post }) {
   return (
         <HoverCard openDelay={100} closeDelay={100}>
           <HoverCardTrigger asChild>

@@ -1,7 +1,9 @@
 import { redirect } from 'next/navigation'
 import { auth } from '@/lib/auth'
-import { getAllPosts, getPublishedPostsView, getUnpublishedPostsView } from '@/db/posts'
-import { getFeaturedPostsView } from "@/db/posts";
+import { getAllPosts, 
+  getPublishedPostsView, 
+  getUnpublishedPostsView, 
+  getFeaturedPostsView } from '@/db/posts'
 import BlogPostManager from '@/components/blog-post-manager';
 import { Post } from '@/lib/utils';
 

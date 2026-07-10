@@ -1,9 +1,9 @@
-import { redirect, notFound } from "next/navigation"
+import { redirect } from "next/navigation"
 import { auth } from "@/lib/auth"
 
 import PostEditor from "@/components/post-editor"
 
-export default async function NewPostPage({ params }: { params: Promise<{ slug: string }> }) {
+export default async function NewPostPage() {
 
   const session = await auth()
   if (!session) redirect("/login")
@@ -13,9 +13,7 @@ export default async function NewPostPage({ params }: { params: Promise<{ slug: 
             <header className="text-xl mx-5">
                 New Post
             </header>
-        <PostEditor /> 
+            <PostEditor /> 
         </main>
-        
-    
   )
 }

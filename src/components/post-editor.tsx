@@ -1,5 +1,4 @@
 'use client' 
-
 import dynamic from 'next/dynamic'
 import '@uiw/react-md-editor/markdown-editor.css' 
 import { Post } from '@/lib/utils'
@@ -25,7 +24,6 @@ import { Badge } from './ui/badge'
 import { slugify, sanitizeSlugInput, toTag } from '@/lib/utils'
 import { createPost, editPost } from '@/db/posts'
 import { Button } from './ui/button'
-import AdminActionAlert, { type AdminAction } from "./admin-action-alert"
 import { Label } from './ui/label'
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false })

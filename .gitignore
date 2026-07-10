@@ -26,6 +26,7 @@
 test-db.ts
 fillerposts.ts
 info.data.ts
+projects.data.ts
 
 # debug
 npm-debug.log*

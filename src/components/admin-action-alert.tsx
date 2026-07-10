@@ -10,9 +10,8 @@ import {
   AlertDialogHeader, 
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog"
-import { deletePost } from "@/db/posts"
+import { deletePost, editPost } from "@/db/actions"
 import type { Post } from "@/lib/utils"
-import { editPost } from "@/db/posts"
 
 export type AdminAction = "delete" | "publish" | "feature"
 

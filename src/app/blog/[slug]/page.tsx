@@ -1,9 +1,10 @@
 import Image from "next/image";
-import { getPostBySlug } from "@/db/posts";
+import { notFound } from "next/navigation";
+import { getPublishedPostBySlug } from "@/db/posts";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
-import { PublishedPost } from "@/lib/utils";
 import MainShell from "@/components/main-shell";
+import { formatDate } from "@/lib/utils";
 
 interface PageProps {
   params: Promise<{
@@ -14,7 +15,9 @@ interface PageProps {
 export default async function BlogPost({params} : PageProps) {
 
   const { slug } = await params
-  const post : PublishedPost = await getPostBySlug(slug)
+  const post = await getPublishedPostBySlug(slug)
+
+  if (!post) notFound()
 
   return (
     <MainShell>
@@ -27,7 +30,7 @@ export default async function BlogPost({params} : PageProps) {
           {post.title}
         </h1>
         <p className="text-sm text-muted-foreground">
-          {post.publishedAt.toLocaleDateString()}
+          {formatDate(post.publishedAt)}
         </p>
         <p className="text-lg leading-relaxed text-muted-foreground">
           {post.description}

@@ -1,28 +1,16 @@
-import { redirect } from 'next/navigation'
-import { auth } from '@/lib/auth'
-import { getAllPosts, 
-  getPublishedPostsView, 
-  getUnpublishedPostsView, 
-  getFeaturedPostsView } from '@/db/posts'
+import { requireAdmin } from '@/lib/auth'
+import { getAdminPosts, AdminView } from '@/db/posts'
 import BlogPostManager from '@/components/blog-post-manager';
 import { Post } from '@/lib/utils';
 
 
-export default async function AdminPage({ searchParams }: { searchParams: Promise<{ view?: string }> }) {
+export default async function AdminPage({ searchParams }: { searchParams: Promise<{ view?: AdminView }> }) {
 
-  const session = await auth()
-  
-  if (!session) {
-    redirect('/login')
-  }
+  await requireAdmin()
 
   const unwrappedParams = await searchParams
   const view = unwrappedParams.view ?? "all"
-  const posts: Post[] =
-    view === "unpublished" ? await getUnpublishedPostsView()
-    : view === "published" ? await getPublishedPostsView()
-    : view === "featured"  ? await getFeaturedPostsView()
-    : await getAllPosts()
+  const posts: Post[] = await getAdminPosts(view)
 
   return(
     <div className="flex flex-1 flex-col gap-4 p-6">

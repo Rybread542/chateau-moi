@@ -22,7 +22,7 @@ import {
 import { CircleCheck, CircleX, Plus, Star, X } from 'lucide-react'
 import { Badge } from './ui/badge'
 import { slugify, sanitizeSlugInput, toTag } from '@/lib/utils'
-import { createPost, editPost } from '@/db/posts'
+import { createPost, editPost } from '@/db/actions'
 import { Button } from './ui/button'
 import { Label } from './ui/label'
 
@@ -42,20 +42,19 @@ export default function PostEditor({ post } : { post?: Post }) {
     const [tags, setTags] = useState<Array<string>>(post?.tags ?? [])
     const [currentTag, setCurrentTag] = useState('')
     const [submitting, setSubmitting] = useState(false)
+    const [error, setError] = useState<string | null>(null)
     const router = useRouter()
     
     const mode = post ? "edit" : "new"
 
 
     const handlePublishChange = () => {
-        setPublished(!published)
+        const next = !published
+        setPublished(next)
         if (!published) setFeatured(false)
     }
 
-    const handleFeatureChange = () => {
-        setFeatured(!featured)
-        if (featured && !published) setPublished(true)
-    }
+    const handleFeatureChange = () => setFeatured(!featured)
 
     const handleTitleChange = (val: string) => {
         setTitle(val)
@@ -75,11 +74,12 @@ export default function PostEditor({ post } : { post?: Post }) {
     }
 
     const handleTagAdd = () => {
-        if (!tags.includes(currentTag)) {
-            const newTags = [...tags, currentTag]
-            setTags(newTags)
-            setCurrentTag('')
-        }
+
+        if (!currentTag || tags.includes(currentTag)) return
+
+        setTags([...tags, currentTag])
+        setCurrentTag('')
+        
     }
 
     const handleTagDelete = (tag: string) => {
@@ -87,30 +87,38 @@ export default function PostEditor({ post } : { post?: Post }) {
         setTags(newTags)
     }
 
+    const handleTagEnterKey = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter") handleTagAdd()
+    }
 
     const handleSubmit = async () => {
         setSubmitting(true)
+        setError(null)
+        try {
+            const data = {
+                slug: slugify(slug),
+                title: title.trim(),
+                body,
+                description: description.trim(),
+                excerpt: excerpt.trim() || null,
+                published,
+                featured,
+                tags
+            }
 
-        const data = {
-            slug: slugify(slug),
-            title: title.trim(),
-            body,
-            description: description.trim(),
-            excerpt: excerpt.trim() || null,
-            published,
-            featured,
-            tags
+            if (mode === 'edit') await editPost(data)
+            else await createPost(data)
+            
+            router.push("/admin")
         }
 
-        if (mode === 'edit') {
-            await editPost(data)
+        catch {
+            setError('Error submitting. Check the slug is unique, otherwise check server')
         }
-        
-        else {
-            await createPost(data)
+
+        finally {
+            setSubmitting(false)
         }
-        
-        router.push("/admin")
 
     }
 
@@ -150,11 +158,11 @@ export default function PostEditor({ post } : { post?: Post }) {
                         <Input value={slug} disabled={mode === 'edit'} onChange={(e) => handleSlugChange(e.target.value)} id="slug" placeholder="must-be-unique" />
                     </Field>
                     <div className="flex flex-1">
-                        <Toggle pressed={published} onClick={handlePublishChange} className="data-[state=on]:bg-emerald-600/40 rounded-xl border-red-500/30 bg-red-500/10 rounded-xl">
+                        <Toggle pressed={published} onClick={handlePublishChange} className="data-[state=on]:bg-emerald-600/40 data-[state=off]:text-red-400 rounded-xl border-red-500/30 bg-red-500/10 rounded-xl">
                             {published ? <CircleCheck /> : <CircleX />}
                             Publish?
                         </Toggle>
-                        <Toggle pressed={featured && published} disabled={!published} onClick={handleFeatureChange} className="data-[state=on]:bg-indigo-500/40 rounded-xl border-indigo-500/30 bg-indigo-500/10 text-indigo-600 dark:text-indigo-400">
+                        <Toggle pressed={featured} disabled={!published} onClick={handleFeatureChange} className="data-[state=on]:bg-indigo-500/40 data-[state=off]:text-indigo-400 rounded-xl border-indigo-500/30 bg-indigo-500/10">
                             <Star />
                             Feature?
                         </Toggle>
@@ -181,7 +189,7 @@ export default function PostEditor({ post } : { post?: Post }) {
                             <Label htmlFor='tags'>
                                 Tags
                             </Label>
-                            <Input id='tags' value={currentTag} onChange={(e) => handleCurrTagChange(e.target.value)}></Input>
+                            <Input id='tags' value={currentTag} onKeyDown={handleTagEnterKey} onChange={(e) => handleCurrTagChange(e.target.value)}></Input>
                             <Button onClick={handleTagAdd}><Plus/></Button>
                         </div>
                     </div>
@@ -191,9 +199,10 @@ export default function PostEditor({ post } : { post?: Post }) {
                  <MDEditor value={body} onChange={(value) => setBody(value ?? "")} height={420} />
             </div>
             <div className="flex justify-end gap-3 lg:col-span-2">
+                {error && <p className="text-sm text-destructive self-center rounded-md border border-destructive p-2">{error}</p>}
                 <AlertDialog>
                     <AlertDialogTrigger asChild>
-                        <Button variant={'ghost'}>
+                        <Button disabled={submitting} variant={'ghost'}>
                             Cancel
                         </Button>
                     </AlertDialogTrigger>

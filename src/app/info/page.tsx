@@ -86,7 +86,9 @@ export default async function Info() {
           </div>
           <Card className="col-start-2 col-end-4 row-start-1 row-end-2">
             <CardContent className="flex flex-col gap-4 text-sm">
-              {info.about}
+              {info.about.map((para, i) => 
+                <p key={i}>{para}</p>
+              )}
             </CardContent>
           </Card>
       </div>

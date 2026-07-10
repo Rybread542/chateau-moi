@@ -1,4 +1,3 @@
-"use client"
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -12,7 +11,7 @@ import {
 import AdminDropdown from "./blog-list-item-admin-dropdown";
 import { PostAdminInfo } from "./blog-list-item-admin-info";
 import { Badge } from "./ui/badge";
-import type { Post, PublishedPost } from "@/lib/utils";
+import { formatDate, type Post, type PublishedPost } from "@/lib/utils";
 import {CircleX, CircleCheck, Star } from "lucide-react";
 import TagBox from "./tag-box";
 
@@ -39,7 +38,7 @@ export default function BlogListItem({post, activeTag, admin} : { post: PostProp
 
                 <div className="mt-auto flex flex-wrap items-center gap-x-3 gap-y-1.5">
                     <ItemDescription className="text-xs">
-                        {post.publishedAt ? post.publishedAt.toLocaleDateString() : "Unpublished"}
+                        {post.publishedAt ? formatDate(post.publishedAt) : "Unpublished"}
                     </ItemDescription>
                     <TagBox tags={post.tags} activeTag={activeTag}/>
                 </div>

@@ -1,5 +1,5 @@
 import Image from "next/image";
-import NavButton from "@/components/navbutton";
+import NavButton from "@/components/nav-button";
 import MainShell from "@/components/main-shell";
 
 

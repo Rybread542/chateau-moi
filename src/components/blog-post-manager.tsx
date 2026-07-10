@@ -10,13 +10,13 @@ import { Input } from "./ui/input";
 import { Button } from "./ui/button";
 import Link from "next/link";
 
-type ViewType = "published" | "unpublished" | "featured" | undefined
+type ViewType = "published" | "unpublished" | "featured" | "all"
 
 export default function BlogPostManager({ posts } : { posts: Array<Post> } ) {
 
     const router = useRouter()
     const searchParams = useSearchParams()
-    const view = (searchParams.get("view") as ViewType) ?? undefined
+    const view = (searchParams.get("view") as ViewType) ?? "all"
     const [isPending, startTransition] = useTransition()
     const [ query, setQuery ] = useState('')
     const queryNormal = query.trim().toLowerCase()
@@ -31,7 +31,7 @@ export default function BlogPostManager({ posts } : { posts: Array<Post> } ) {
     
     const empty = filtered.length === 0
 
-    const handleViewChange = async (type: string) => {
+    const handleViewChange = (type: string) => {
         startTransition(() => {
             router.replace(`?view=${type}`, {scroll: false})
         })
@@ -52,7 +52,7 @@ export default function BlogPostManager({ posts } : { posts: Array<Post> } ) {
                         <Input placeholder="Search it up..." className="h-9 rounded-md border-0 bg-transparent shadow-none" onChange={(e) => setQuery(e.target.value)}/>
                     </div>
     
-                        <ToggleGroup className="rounded-lg bg-muted/50 p-1" type="single" variant={'outline'} value={view} onValueChange={(v) => handleViewChange(v)}>
+                        <ToggleGroup className="rounded-lg bg-muted/50 p-1" type="single" variant={'outline'} value={view} onValueChange={(v) => handleViewChange(v ?? "all")}>
                             <ToggleGroupItem value="published" className="flex-1 hover:bg-emerald-600/40 data-[state=on]:bg-emerald-600/40 rounded-xl border-emerald-500/30 bg-emerald-500/10 text-emerald-600 dark:text-emerald-400">
                                 <CircleCheck />
                                 Published

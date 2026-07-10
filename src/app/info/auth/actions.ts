@@ -14,7 +14,7 @@ export async function auth(formData: FormData) {
   await session.save();
 
   if (!shouldAuthenticate) {
-    redirect(`/info?redirect=${encodeURIComponent(redirectPath)}`);
+    redirect(`/info/auth?redirect=${encodeURIComponent(redirectPath)}`);
   }
 
   redirect(redirectPath.at(0) === "/" ? redirectPath : "/");

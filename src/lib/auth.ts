@@ -1,18 +1,25 @@
 import NextAuth from "next-auth"
 import GitHub from "next-auth/providers/github"
-import { getIronSession, SessionOptions } from "iron-session";
+import { SessionOptions, getIronSession } from "iron-session";
 import { cookies } from "next/headers";
+import { redirect } from "next/navigation"
 
+
+export async function requireAdmin() {
+  const session = await auth()
+  if (!session) redirect("/login")
+  return session
+}
 
 export interface SessionData {
   isAuthed: boolean;
 }
 
-export const sessionOptions = {
+export const sessionOptions: SessionOptions = {
   password: process.env.IRON_SESSION_SECRET!,
   cookieName: "_auth",
   cookieOptions: {
-    secure: process.env.NODE_ENV == "production",
+    secure: process.env.NODE_ENV === "production",
   }
 }
 

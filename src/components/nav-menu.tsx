@@ -26,7 +26,7 @@ const listItems = [
   
 ]
 
-export default function navMenu() {
+export default function NavMenu() {
   return (
     <div className="p-2 fixed">
         <DropdownMenu>

@@ -1,15 +1,14 @@
-import { redirect, notFound } from "next/navigation"
-import { auth } from "@/lib/auth"
-import { getPostBySlug } from "@/db/posts"
+import { notFound } from "next/navigation"
+import { requireAdmin } from "@/lib/auth"
+import { getAdminPostBySlug } from "@/db/posts"
 import PostEditor from "@/components/post-editor"
 
 export default async function EditPostPage({ params }: { params: Promise<{ slug: string }> }) {
 
-  const session = await auth()
-  if (!session) redirect("/login")
+  await requireAdmin()
 
   const { slug } = await params
-  const post = await getPostBySlug(slug)
+  const post = await getAdminPostBySlug(slug)
   if (!post) notFound()
 
   return ( 

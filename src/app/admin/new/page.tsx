@@ -1,12 +1,10 @@
-import { redirect } from "next/navigation"
-import { auth } from "@/lib/auth"
+import { requireAdmin } from "@/lib/auth"
 
 import PostEditor from "@/components/post-editor"
 
 export default async function NewPostPage() {
 
-  const session = await auth()
-  if (!session) redirect("/login")
+  await requireAdmin()
 
   return ( 
         <main className="flex flex-col grow px-4 py-6">

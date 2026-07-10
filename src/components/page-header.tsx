@@ -1,7 +1,9 @@
 
 
 
-export default function PageHeader({title, sub} : {title: string; sub?: string;}) {
+export default function PageHeader({title, sub} : {
+  title: string | Readonly<React.ReactNode>; 
+  sub?: string;}) {
   
   return (
     <header className="mb-4 flex flex-col gap-1">

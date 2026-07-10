@@ -8,7 +8,7 @@ import {
   ItemMedia,
   ItemTitle,
 } from "@/components/ui/item";
-import { PublishedPost } from "@/lib/utils";
+import { formatDate, PublishedPost } from "@/lib/utils";
 
 export default function FeaturedPost({ post } : { post: PublishedPost }) {
 
@@ -32,7 +32,7 @@ export default function FeaturedPost({ post } : { post: PublishedPost }) {
                     {post.description}
                 </ItemDescription>
                 <ItemDescription className="text-xs">
-                    {post.publishedAt!.toLocaleDateString()}
+                    {formatDate(post.publishedAt)}
                 </ItemDescription>
             </ItemContent>
         </Item>

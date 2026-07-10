@@ -40,6 +40,14 @@ export type TagsCount = {
   count: number;
 }[]
 
+export function formatDate(date: Date) {
+  return new Intl.DateTimeFormat("en-US", {
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+  }).format(date)
+}
+
 const MAX_SLUG_LENGTH = 60
 
 export function slugify(input: string, maxLength = MAX_SLUG_LENGTH): string {

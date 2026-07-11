@@ -43,7 +43,9 @@ export function Paginate({ totalPages, currPage, searchParams, mode }
         {paginateItems.map((item) =>
                 (
                 <PaginationItem key={item}>
-                    <PaginationLink className={item === currPage ? "border-primary/40 bg-primary/10 text-indigo-300" : undefined} href={getPageParams(item, searchParams, mode)} isActive={item === currPage}>
+                    <PaginationLink className={item === currPage ? "border-primary/40 bg-primary/10 text-indigo-300" : undefined} 
+                    href={item !== currPage ? getPageParams(item, searchParams, mode) : undefined} 
+                    isActive={item === currPage}>
                         {item}
                     </PaginationLink>
                 </PaginationItem>

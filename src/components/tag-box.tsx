@@ -1,3 +1,4 @@
+import { cn } from "@/lib/utils"
 import { Badge } from "./ui/badge"
 import { HoverCard, 
         HoverCardContent,
@@ -11,7 +12,12 @@ export default function TagBox({ tags, activeTag } : { tags: string[], activeTag
         
         <div className="flex flex-wrap items-center gap-1.5">
             {tags.slice(0,3).map(tag => 
-                <Badge className="rounded-xl border-primary/25 bg-primary/10 text-indigo-300" key={tag} variant={tag === activeTag ? 'default' : 'outline'}>
+                <Badge className={cn(
+                        "rounded-xl",
+                        tag !== activeTag && "border-primary/25 bg-primary/10 text-primary"
+                        )} 
+                        key={tag} 
+                        variant={tag === activeTag ? 'default' : 'outline'}>
                     {tag}
                 </Badge>
             )}

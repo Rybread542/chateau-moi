@@ -12,11 +12,11 @@ export default async function EditPostPage({ params }: { params: Promise<{ slug:
   if (!post) notFound()
 
   return ( 
-        <main className="flex flex-col grow px-4 py-6">
+        <main className="flex flex-col grow px-10 py-6">
             <header className="text-xl mx-5">
-                Edit post
+                Edit Post
             </header>
-        <PostEditor post={post} /> 
+            <PostEditor post={post} /> 
         </main>
         
     

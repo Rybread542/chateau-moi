@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card"
 import { Mail, Phone } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { info } from "./auth/info.data";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import PageHeader from "@/components/page-header";
 
@@ -18,13 +19,15 @@ export default async function Info() {
   return (
     <MainShell>
       <PageHeader title="About" />
-      <div className="grid grid-cols-3 gap-8">
-          <div className="col-end-2 flex flex-col gap-4">
+      <div className="grid gap-8 md:grid-cols-3">
+          <div className="flex flex-col gap-4 md:col-end-2">
             <Card>
-              <img
+              <Image
                 src="/default.png"
                 alt="Me"
                 className="relative z-20 aspect-video w-full object-cover p-2"
+                width={480}
+                height={480}
               />
               <CardContent className="space-y-4 px-2">
                 <div className="flex gap-2 items-center">
@@ -84,7 +87,7 @@ export default async function Info() {
               </CardContent>
             </Card>
           </div>
-          <Card className="col-start-2 col-end-4 row-start-1 row-end-2">
+          <Card className="md:col-start-2 md:col-end-4 md:row-start-1 md:row-end-2">
             <CardContent className="flex flex-col gap-4 text-sm">
               {info.about.map((para, i) => 
                 <p key={i}>{para}</p>

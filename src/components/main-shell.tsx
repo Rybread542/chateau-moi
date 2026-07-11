@@ -7,7 +7,7 @@ export default function MainShell({
 }>) {
   
   return (
-    <main className="mx-auto w-full max-w-5xl flex-1 flex flex-col px-20 md:px-18 sm:px-20 py-8 sm:py-14">
+    <main className="mx-auto w-full max-w-5xl flex-1 flex flex-col px-16 sm:px-15 lg:px-10 py-12 sm:py-14">
         {children}
     </main>  
   )

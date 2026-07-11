@@ -22,7 +22,7 @@ export default async function InfoAuth(props: AuthProps) {
 
     return (
         <MainShell>
-            <form action={auth} className="mx-auto my-50 w-78 rounded-md rounded-xl bg-card p-6 shadow-primary/25">
+            <form action={auth} className="mx-auto my-auto w-full max-w-xs rounded-xl border bg-card p-6 shadow-lg shadow-primary/25">
                     <input
                         name="redirect"
                         type="hidden"

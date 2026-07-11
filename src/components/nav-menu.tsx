@@ -1,3 +1,4 @@
+'use client';
 import { Button } from '@/components/ui/button'
 import {
   DropdownMenu,
@@ -9,6 +10,7 @@ import {
 import { ChevronDown } from 'lucide-react'
 import Image from 'next/image'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 
 const listItems = [
   {
@@ -26,13 +28,22 @@ const listItems = [
   
 ]
 
+const noNav = ['/', '/admin']
+
 export default function NavMenu() {
+  const pathname = usePathname()
+
+  const hide = noNav.some(p => pathname === p || pathname.startsWith(p + '/'))
+  if (hide) return null
+
   return (
-    <div className="p-2 fixed">
+    <div className="p-2 z-50 fixed">
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button variant='ghost' size='icon' className='rounded-sm p-2 size-12'>
-              <Image src={'/bread.svg'} alt='nav' width={40} height={40} className='invert'/>
+            <Button variant='ghost' 
+                  size='icon' 
+                  className="size-10 sm:size-11 rounded-md p-2 bg-background/60 backdrop-blur-sm border border-border/50">
+              <Image src={'/bread-icon.svg'} alt='nav' width={40} height={40}/>
               <ChevronDown className='size-3'/>
             </Button>
           </DropdownMenuTrigger>

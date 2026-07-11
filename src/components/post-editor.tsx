@@ -74,12 +74,10 @@ export default function PostEditor({ post } : { post?: Post }) {
     }
 
     const handleTagAdd = () => {
-
         if (!currentTag || tags.includes(currentTag)) return
 
         setTags([...tags, currentTag])
         setCurrentTag('')
-        
     }
 
     const handleTagDelete = (tag: string) => {
@@ -125,7 +123,7 @@ export default function PostEditor({ post } : { post?: Post }) {
     const formComplete = Boolean(title.trim() && description.trim() && body.trim())
 
     return(
-        <div className="grid flex-1 content-start gap-x-8 gap-y-6 p-6 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] overflow-y-scroll">
+        <div className="grid flex-1 content-start gap-x-8 gap-y-6 p-8 lg:grid-cols-[minmax(0,2fr)_minmax(0,1fr)] overflow-y-auto">
                 <div className="flex flex-col gap-3">
                     <Field>
                         <FieldLabel htmlFor="title">
@@ -169,19 +167,16 @@ export default function PostEditor({ post } : { post?: Post }) {
                     </div>
 
                     <div className="flex flex-col gap-2">
-                        <div className="flex flex-wrap bg-muted p-2 rounded-lg">
-                            {tags.length > 0 ? 
-                            tags.map(tag => (
-                            <Badge key={tag} variant={'outline'} className='rounded-sm px-2 py-3'>
-                                {tag}
-                                <button className="rounded-full p-0.5 hover:bg-muted"onClick={() => handleTagDelete(tag)} >
-                                    <X className="rounded-full p-0.5 hover:bg-muted" size={12}/>
-                                </button>
-                            </Badge>
+                        <div className="flex min-h-11 flex-wrap items-center gap-1.5 rounded-lg bg-muted p-2">
+                            {tags.map(tag => (
+                                <Badge key={tag} variant={'outline'} className='rounded-md px-2 py-1'>
+                                    {tag}
+                                    <button className="rounded-full p-0.5 hover:bg-accent"onClick={() => handleTagDelete(tag)} >
+                                        <X size={12}/>
+                                    </button>
+                                </Badge>
                                 
-                            ))
-                            :
-                            ''
+                                ))
                             }
                             
                         </div>

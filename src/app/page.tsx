@@ -6,11 +6,12 @@ import MainShell from "@/components/main-shell";
 export default function Home() {
   return (
       <MainShell>
-          <div className="flex items-center justify-center mt-48 sm:mt-24 gap-8 md:flex-row md:gap-14 lg:gap-24">
+          <div className="mt-16 flex flex-col items-center justify-center gap-8 sm:mt-24 md:flex-row md:gap-14 lg:gap-18">
             <div className="relative aspect-square w-40 sm:w-56 md:w-72">
-                <Image src={'/profile.png'}
+                <Image src={'/bread-icon.svg'}
                 alt="hey"
                 fill
+                priority
                 className="object-contain"
                 sizes="(max-width: 768px) 224px, 288px">
                 </Image>

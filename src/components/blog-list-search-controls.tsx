@@ -11,7 +11,7 @@ export default async function BlogSearchControls({ returnButton } : { returnButt
   const tagCounts = await getTagCounts()  
 
   return (
-    <div className='py-2 flex justify-start items-center gap-2'>
+    <div className='py-2 flex flex-col items-start sm:flex-row justify-start md:items-center gap-2'>
         {returnButton &&
           <NavButton text={<ArrowLeft />} navTo="/blog" />
         }

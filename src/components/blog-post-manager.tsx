@@ -79,7 +79,7 @@ export default function BlogPostManager({ posts } : { posts: Array<Post> } ) {
                     <BlogPostSkeleton />
                 }
                 {!isPending && empty &&
-                    <div className="flex text-lg mt-20 self-center">I got nothing.</div>
+                    <div className="flex flex-1 items-center justify-center py-16 text-muted-foreground">I got nothing.</div>
                 }
             </div>
         </>

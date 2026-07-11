@@ -90,6 +90,11 @@
   scrollbar-color: oklch(0.62 0.19 277 / 35%) transparent;
 }
 
+html {
+  @apply font-sans;
+  color-scheme: dark;
+}
+
 ::-webkit-scrollbar { width: 10px; height: 10px; }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {

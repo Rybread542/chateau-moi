@@ -3,35 +3,17 @@ import { Skeleton } from "./ui/skeleton";
 export default function BlogPostSkeleton() {
 
     return(
-<>
-            <div className="flex items-center gap-4">
-                <Skeleton className="h-12 w-12 rounded-full" />
-                <div className="space-y-2">
-                    <Skeleton className="h-4 w-[250px]" />
-                    <Skeleton className="h-4 w-[200px]" />
-                </div>
+    <>
+    {
+    Array.from({ length: 4 }).map((i, idx) =>
+        <div key={idx} className="w-full items-start gap-4 px-4 py-6 sm:gap-6 flex">
+            <Skeleton className="h-full w-12 rounded-md" />
+            <div className="space-y-2">
+                <Skeleton className="h-4 w-[250px] flex-1" />
+                <Skeleton className="h-4 w-[200px] flex-1" />
             </div>
-            <div className="flex items-center gap-4">
-                <Skeleton className="h-12 w-12 rounded-full" />
-                <div className="space-y-2">
-                    <Skeleton className="h-4 w-[250px]" />
-                    <Skeleton className="h-4 w-[200px]" />
-                </div>
-            </div>
-            <div className="flex items-center gap-4">
-                <Skeleton className="h-12 w-12 rounded-full" />
-                <div className="space-y-2">
-                    <Skeleton className="h-4 w-[250px]" />
-                    <Skeleton className="h-4 w-[200px]" />
-                </div>
-            </div>
-            <div className="flex items-center gap-4">
-                <Skeleton className="h-12 w-12 rounded-full" />
-                <div className="space-y-2">
-                    <Skeleton className="h-4 w-[250px]" />
-                    <Skeleton className="h-4 w-[200px]" />
-                </div>
-            </div>
-        </>
+        </div>
+    )}
+    </>
     )
 }

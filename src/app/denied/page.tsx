@@ -2,7 +2,7 @@ import MainShell from "@/components/main-shell"
 import NavButton from "@/components/nav-button"
 
 
-export default async function InvalidUser() {
+export default function InvalidUser() {
   
   return(
     <MainShell>

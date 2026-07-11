@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import NavMenu from "@/components/nav-menu";
@@ -13,11 +13,17 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "Ryan Bread",
-    template: '%s · Ryan Bread'
+    default: "Chateau Bread",
+    template: '%s · Chateau Bread'
   },
   description: "Not your grandmother's generic personal site",
-};
+}
+
+export const viewport: Viewport = {
+  themeColor: "#121216",
+}
+
+
 
 export default function RootLayout({
   children,

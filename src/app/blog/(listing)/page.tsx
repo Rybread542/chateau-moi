@@ -24,7 +24,7 @@ export default async function Blog({
             <PageHeader title="Blog" sub="maybe"/>
             <BlogSearchControls returnButton={false}/>
             {posts.length === 0 ? 
-                <div className="flex items-center mx-auto flex-1">
+                <div className="flex flex-1 items-center justify-center py-16 text-muted-foreground">
                     <div>{"There's nothing here! Wow!"}</div>
                 </div>
                 :

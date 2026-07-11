@@ -8,7 +8,7 @@ export default async function Projects() {
 
   return (
       <MainShell>
-           <PageHeader title="Projects" sub="maybe"/>
+           <PageHeader title="Projects" sub="fun stuff I work on"/>
            <div className="flex flex-col flex-1 gap-8 sm:p-6 md:p-10">
                 {projects.map(proj => 
                     <ProjectCard key={proj.href} project={proj}/>

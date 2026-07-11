@@ -9,7 +9,7 @@ export default function Home() {
           <div className="mt-16 flex flex-col items-center justify-center gap-8 sm:mt-24 md:flex-row md:gap-14 lg:gap-18">
             <div className="relative aspect-square w-40 sm:w-56 md:w-72">
                 <Image src={'/bread-icon.svg'}
-                alt="hey"
+                alt="Bread"
                 fill
                 priority
                 className="object-contain"
@@ -19,10 +19,10 @@ export default function Home() {
             <div className="flex flex-col items-center gap-1 text-center md:items-start md:text-left">
                 <div className="flex flex-col items-center justify-center">
                     <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-                      Lorem Ipsum
+                      Chateau Bread
                     </h1>
                     <p className="font-light text-muted-foreground">
-                      Lorem ipsum dolor sit amet.
+                      welcome
                     </p>
                 </div>
             </div>
@@ -34,5 +34,5 @@ export default function Home() {
           </nav>
       </MainShell>
     
-  );
+  )
 }

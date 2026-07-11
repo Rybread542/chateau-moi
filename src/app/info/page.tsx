@@ -23,7 +23,7 @@ export default async function Info() {
           <div className="flex flex-col gap-4 md:col-end-2">
             <Card>
               <Image
-                src="/default.png"
+                src="/profile.png"
                 alt="Me"
                 className="relative z-20 aspect-video w-full object-cover p-2"
                 width={480}

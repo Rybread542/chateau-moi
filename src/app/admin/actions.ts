@@ -19,9 +19,14 @@ export async function uploadImage(
 ){
     await requireAdmin()
 
-    const file = formData.get('file') as File
-    const slug = formData.get('slug') as String
-    const key = `${slug}/${file.name}-${formData.get('id') as String}`
+    const file = formData.get('file')
+    if (!(file instanceof File)) {
+        return "Error pasting"
+    }
+
+    const slug = String(formData.get('slug')) as string
+    const id = String(formData.get('id'))
+    const key = `${slug}/${file.name}-${id}`
     const imgBuffer = Buffer.from(await file.arrayBuffer())
 
     const command = new PutObjectCommand({

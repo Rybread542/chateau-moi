@@ -1,4 +1,5 @@
 allowBuilds:
+  aws-sdk: true
   esbuild: true
   sharp: true
   unrs-resolver: true

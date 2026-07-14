@@ -25,9 +25,9 @@ import { slugify, sanitizeSlugInput, toTag } from '@/lib/utils'
 import { createPost, editPost } from '@/db/actions'
 import { Button } from './ui/button'
 import { Label } from './ui/label'
+import { uploadImage } from '@/app/admin/actions'
 
 const MDEditor = dynamic(() => import("@uiw/react-md-editor"), { ssr: false })
-
 
 export default function PostEditor({ post } : { post?: Post }) {
 
@@ -47,6 +47,35 @@ export default function PostEditor({ post } : { post?: Post }) {
     
     const mode = post ? "edit" : "new"
 
+
+    const handlePaste = async(event: React.ClipboardEvent<HTMLTextAreaElement>) => {
+        const data = event.clipboardData
+
+        if (data.files.length === 1 && data.files[0].type.startsWith('image/')) {
+                event.preventDefault()
+                const file = data.files[0] as File
+                const id = crypto.randomUUID()
+                const token = `![uploading ${file.name}…](#${id})`
+                const pos = event.currentTarget.selectionStart
+
+            try {
+                setBody((b) => b.slice(0, pos) + token + b.slice(pos))
+
+                const formData = new FormData()
+                formData.append('file', file)
+                formData.append('slug', slug)
+                formData.append('id', id)
+
+                const url = await uploadImage(formData)
+                setBody((b) => b.replace(token, () => `![${file.name}](${url})`))
+                return url
+
+            } catch {
+                setBody((b) => b.replace(token, ""))
+            }
+        }
+        return
+    }
 
     const handlePublishChange = () => {
         const next = !published
@@ -191,7 +220,14 @@ export default function PostEditor({ post } : { post?: Post }) {
                 </div>
 
             <div className="lg:col-span-2">
-                 <MDEditor value={body} onChange={(value) => setBody(value ?? "")} height={420} />
+                 <MDEditor
+                 height={420}  
+                 value={body}
+                 onChange={(value) => setBody(value ?? "")} 
+                 textareaProps={{
+                    onPaste: handlePaste
+                 }}
+                  />
             </div>
             <div className="flex justify-end gap-3 lg:col-span-2">
                 {error && <p className="text-sm text-destructive self-center rounded-md border border-destructive p-2">{error}</p>}

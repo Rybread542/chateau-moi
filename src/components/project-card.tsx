@@ -16,7 +16,7 @@ return (
         </ItemMedia>
         <ItemContent className="min-w-0 justify-between gap-3 py-1">
             <ItemTitle className="">
-                <a href={project.href} className="text-xl font-semibold tracking-tight after:absolute after:inset-0 sm:text-2xl">
+                <a href={project.href} target="_blank" className="text-xl font-semibold tracking-tight after:absolute after:inset-0 sm:text-2xl">
                     {project.title}
                 </a>
             </ItemTitle>

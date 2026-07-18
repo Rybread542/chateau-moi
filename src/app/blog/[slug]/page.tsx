@@ -23,7 +23,7 @@ export default async function BlogPost({params} : PageProps) {
     <MainShell>
       <div className="mx-auto w-full max-w-3xl">
         <figure className="relative mb-8 aspect-[2/1] w-full overflow-hidden rounded-xl">
-          <Image src="/default.png" alt={post.title} sizes="(min-width: 768px) 768px, 100vw" fill className="object-cover" />
+          <Image src={post.image} alt={post.title} sizes="(min-width: 768px) 768px, 100vw" fill className="object-cover" />
         </figure>
 
         <header className="mb-10 flex flex-col gap-3">

@@ -14,6 +14,7 @@ type InputPost = {
     description: string;
     published: boolean;
     featured: boolean;
+    image: string;
     tags: string[];
 }
 
@@ -67,6 +68,7 @@ export async function createPost(input: InputPost) {
     description: input.description,
     published: input.published,
     publishedAt: input.published ? new Date() : null,
+    image: input.image,
     featured: input.featured && input.published,
   }).returning({ id: posts.id })
 
@@ -100,6 +102,7 @@ export async function editPost(input: InputPost) {
     excerpt: input.excerpt ?? null,
     published: input.published,
     publishedAt,
+    image: input.image,
     featured,
   }).where(eq(posts.id, current.id))
 

@@ -17,6 +17,7 @@ export type Post = {
   publishedAt: Date | null;
   createdAt: Date; 
   updatedAt: Date;
+  image: string;
   tags: string[];
 }
 
@@ -32,6 +33,7 @@ export type PublishedPost = {
   publishedAt: Date;
   createdAt: Date; 
   updatedAt: Date;
+  image: string;
   tags: string[];
 }
 

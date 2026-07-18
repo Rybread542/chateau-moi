@@ -1,9 +1,10 @@
 'use client' 
 import dynamic from 'next/dynamic'
 import '@uiw/react-md-editor/markdown-editor.css' 
+import Image from "next/image";
 import { Post } from '@/lib/utils'
 import { useRouter } from 'next/navigation'
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { Field, FieldLabel } from './ui/field'
 import { Input } from './ui/input'
 import { Textarea } from './ui/textarea'
@@ -19,7 +20,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
-import { CircleCheck, CircleX, Plus, Star, X } from 'lucide-react'
+import { CircleCheck, CircleX, Plus, Star, Upload, X } from 'lucide-react'
 import { Badge } from './ui/badge'
 import { slugify, sanitizeSlugInput, toTag } from '@/lib/utils'
 import { createPost, editPost } from '@/db/actions'
@@ -39,10 +40,13 @@ export default function PostEditor({ post } : { post?: Post }) {
     const [body, setBody] = useState(post?.body ?? "")
     const [published, setPublished] = useState(post?.published ?? false)
     const [featured, setFeatured] = useState(post?.featured ?? false)
+    const inputRef = useRef<HTMLInputElement>(null)
+    const [image, setImage] = useState(post?.image ?? '/default.png')
     const [tags, setTags] = useState<Array<string>>(post?.tags ?? [])
     const [currentTag, setCurrentTag] = useState('')
     const [submitting, setSubmitting] = useState(false)
     const [error, setError] = useState<string | null>(null)
+    const [uploadError, setUploadError] = useState<string | null>(null)
     const router = useRouter()
     
     const mode = post ? "edit" : "new"
@@ -75,6 +79,39 @@ export default function PostEditor({ post } : { post?: Post }) {
             }
         }
         return
+    }
+
+
+    const handleImgUpload = async(event: React.ChangeEvent<HTMLInputElement>) => {
+        setUploadError(null)
+        const file = event.target.files?.[0] as File
+        if (!file) return
+
+        if (file.type.startsWith('image/png')) {
+            const id = crypto.randomUUID()
+
+            try {
+                const formData = new FormData()
+                formData.append('file', file)
+                formData.append('slug', slug)
+                formData.append('id', id)
+
+                const url = await uploadImage(formData)
+                setImage(url)
+                return url
+            } 
+            catch {
+                setUploadError('Error uploading the file. is it png?')
+                event.target.value = ""
+                return
+            }
+        }
+
+        else {
+            setUploadError('PNGs only bub')
+        }
+
+        event.target.value = ""
     }
 
     const handlePublishChange = () => {
@@ -130,6 +167,7 @@ export default function PostEditor({ post } : { post?: Post }) {
                 excerpt: excerpt.trim() || null,
                 published,
                 featured,
+                image,
                 tags
             }
 
@@ -193,6 +231,20 @@ export default function PostEditor({ post } : { post?: Post }) {
                             <Star />
                             Feature?
                         </Toggle>
+                    </div>
+
+                    <div className="flex gap-4 bg-muted p-4 rounded-lg">
+                        <div className="flex flex-col gap-2 flex-1 justify-between">
+                            <Button className='flex-1' type="button" onClick={() => inputRef.current?.click()}>
+                                <Upload />
+                            </Button>
+                            <Input ref={inputRef} className='hidden' type='file' accept='image/*' onChange={handleImgUpload}></Input>
+                            {uploadError && 
+                                <p className='text-destructive'>{uploadError}</p>
+                            }
+                            
+                        </div>
+                        <Image alt='' width={75} height={75} src={image}/>
                     </div>
 
                     <div className="flex flex-col gap-2">

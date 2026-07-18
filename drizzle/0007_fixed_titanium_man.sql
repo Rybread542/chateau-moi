@@ -1,0 +1,1 @@
+ALTER TABLE "posts" ADD COLUMN "image" text DEFAULT '/default.png' NOT NULL;

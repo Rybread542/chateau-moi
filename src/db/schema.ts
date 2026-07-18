@@ -12,7 +12,8 @@ export const posts = pgTable('posts', {
     publishedAt : timestamp('published_at'),
     createdAt : timestamp('created_at').notNull().defaultNow(),
     updatedAt : timestamp('updated_at').notNull().defaultNow().$onUpdate(() => new Date()),
-    featured : boolean('featured').notNull().default(false)
+    featured : boolean('featured').notNull().default(false),
+    image : text('image').notNull().default('/default.png')
 })
 
 export const tags = pgTable('tags', {

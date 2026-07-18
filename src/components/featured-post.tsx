@@ -19,7 +19,7 @@ export default function FeaturedPost({ post } : { post: PublishedPost }) {
             </p>
             <ItemHeader>
                 <ItemMedia variant={'image'} className="relative w-full h-48 overflow-hidden rounded-lg">
-                    <Image src={'/default.png'} alt="yes" sizes="(min-width: 1024px) 33vw, 100vw" fill className="object-cover"></Image>
+                    <Image src={post.image} alt="yes" sizes="(min-width: 1024px) 33vw, 100vw" fill className="object-cover"></Image>
                 </ItemMedia>
             </ItemHeader>
             <ItemContent className="gap-2">

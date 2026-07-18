@@ -24,7 +24,7 @@ export default function BlogListItem({post, activeTag, admin} : { post: PostProp
     return(
         <Item variant={admin ? 'outline' : 'default'} className="w-full items-start gap-4 px-0 py-6 sm:gap-6">
             <ItemMedia variant={'image'} className="relative size-20 shrink-0 overflow-hidden rounded-lg sm:size-32">
-                <Image src={'/default.png'} sizes="(min-width: 640px) 128px, 80px" alt="yes" fill className="object-cover"></Image>
+                <Image src={post.image} sizes="(min-width: 640px) 128px, 80px" alt="yes" fill className="object-cover"></Image>
             </ItemMedia>
             <ItemContent className="min-w-0 gap-2">
                 <ItemTitle className="text-lg font-semibold tracking-tight sm:text-xl">

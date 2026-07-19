@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { notFound } from "next/navigation";
 import { getPublishedPostBySlug } from "@/db/posts";
+import type { Metadata } from "next";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import MainShell from "@/components/main-shell";
@@ -12,12 +13,36 @@ interface PageProps {
   }>
 }
 
+export async function generateMetaData({ params }: PageProps):
+Promise<Metadata> {
+    const { slug } = await params
+    const post = await getPublishedPostBySlug(slug)
+
+    return {
+      title: post?.title ?? 'Not found',
+      description: post?.description ?? 'Nothing here',
+      openGraph: {
+          title: post?.title ?? 'Not found',
+          description: post?.description ?? 'Nothing here',
+          images: [
+            post?.image ? 
+             { url: post.image, width: 600, height: 400}
+             : 
+             { url: '/default.png', width: 600, height: 400 }
+            ],
+          type: 'article'
+      }
+    }
+  }
+
 export default async function BlogPost({params} : PageProps) {
 
   const { slug } = await params
   const post = await getPublishedPostBySlug(slug)
 
   if (!post) notFound()
+
+  
 
   return (
     <MainShell>

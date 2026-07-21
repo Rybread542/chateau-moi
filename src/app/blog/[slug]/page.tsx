@@ -28,9 +28,9 @@ Promise<Metadata> {
           description: post?.description ?? 'Nothing here',
           images: [
             post?.image ? 
-             { url: post.image, width: 500, height: 500}
+             { url: post.image, width: 150, height: 150}
              : 
-             { url: '/default.png', width: 500, height: 500 }
+             { url: '/default.png', width: 150, height: 150 }
             ],
           type: 'article'
       }

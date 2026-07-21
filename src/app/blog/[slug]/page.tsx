@@ -4,6 +4,7 @@ import { getPublishedPostBySlug } from "@/db/posts";
 import type { Metadata } from "next";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from 'rehype-raw';
 import MainShell from "@/components/main-shell";
 import { formatDate } from "@/lib/utils";
 
@@ -69,7 +70,7 @@ export default async function BlogPost({params} : PageProps) {
           prose-blockquote:border-l-primary/50
           prose-code:text-indigo-300 prose-pre:bg-muted
           prose-img:rounded-lg">
-          <Markdown remarkPlugins={[remarkGfm]}>{post.body}</Markdown>
+          <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>{post.body}</Markdown>
         </article>
       </div>
     </MainShell>

@@ -5,6 +5,7 @@ import type { Metadata } from "next";
 import Markdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import rehypeRaw from 'rehype-raw';
+import rehypeUnwrapImages from 'rehype-unwrap-images';
 import MainShell from "@/components/main-shell";
 import { formatDate } from "@/lib/utils";
 
@@ -72,7 +73,7 @@ export default async function BlogPost({params} : PageProps) {
           prose-img:rounded-lg">
           <Markdown 
           remarkPlugins={[remarkGfm]} 
-          rehypePlugins={[rehypeRaw]}
+          rehypePlugins={[rehypeRaw, rehypeUnwrapImages]}
           components={{
             img: ({node, ...props}) =>
               props.title ? 

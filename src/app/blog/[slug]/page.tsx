@@ -79,8 +79,8 @@ export default async function BlogPost({params} : PageProps) {
               props.title ? 
             (<figure>
               <img {...props}/>
-              <figcaption className="text-left">
-                {props.title}
+              <figcaption className="text-left mt-1">
+                <i>{props.title}</i>
               </figcaption>
             </figure>)
             :

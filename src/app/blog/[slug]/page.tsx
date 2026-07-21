@@ -70,7 +70,22 @@ export default async function BlogPost({params} : PageProps) {
           prose-blockquote:border-l-primary/50
           prose-code:text-indigo-300 prose-pre:bg-muted
           prose-img:rounded-lg">
-          <Markdown remarkPlugins={[remarkGfm]} rehypePlugins={[rehypeRaw]}>{post.body}</Markdown>
+          <Markdown 
+          remarkPlugins={[remarkGfm]} 
+          rehypePlugins={[rehypeRaw]}
+          components={{
+            img: ({node, ...props}) =>
+              props.title ? 
+            (<figure>
+              <img {...props}/>
+              <figcaption className="text-left">
+                {props.title}
+              </figcaption>
+            </figure>)
+            :
+            (<img {...props}/>)
+          }}
+          >{post.body}</Markdown>
         </article>
       </div>
     </MainShell>

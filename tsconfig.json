@@ -29,6 +29,6 @@
     ".next/types/**/*.ts",
     ".next/dev/types/**/*.ts",
     "**/*.mts"
-  ],
+, "../test-blog/fillerfilm.ts"  ],
   "exclude": ["node_modules"]
 }

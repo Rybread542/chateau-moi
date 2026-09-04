@@ -32,8 +32,8 @@ const data = {
           url: "/admin?view=unpublished",
         },
         {
-          title: "Reviews",
-          url: "#",
+          title: "Spooktober",
+          url: "/admin?view=spooktober",
         },
       ],
     },

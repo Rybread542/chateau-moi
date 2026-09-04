@@ -42,6 +42,31 @@ export type TagsCount = {
   count: number;
 }[]
 
+export type StFilmByStYear = {
+    id: string;
+    count: number;
+    createdAt: Date;
+    tmdbId: number;
+    imdbId: string;
+    title: string;
+    releaseYear: number;
+    director: string[];
+    poster: string;
+    submittedBy: string[];
+    stYear: number;
+    slot: number | null;
+    approved: boolean;
+    active: boolean;
+}
+
+export type SearchDisplayFilm = {
+    id: number;
+    title: string;
+    year: string;
+    poster: string;
+    overview: string;
+}
+
 export function formatDate(date: Date) {
   return new Intl.DateTimeFormat("en-US", {
     year: "numeric",

@@ -2,7 +2,9 @@ import type { Metadata, Viewport } from "next";
 import { Geist_Mono, Inter } from "next/font/google";
 import "./globals.css";
 import NavMenu from "@/components/nav-menu";
+import { TooltipProvider } from "@/components/ui/tooltip"
 import { cn } from "@/lib/utils";
+import { Toaster } from "@/components/ui/sonner";
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
@@ -38,7 +40,8 @@ export default function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <NavMenu />
-        {children}
+        <TooltipProvider>{children}</TooltipProvider>
+        <Toaster />
       </body>
     </html>
   );

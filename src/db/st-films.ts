@@ -32,6 +32,7 @@ interface TmdbFilmById {
     id: number;
     imdb_id: string;
     original_title: string;
+    title: string;
     poster_path: string;
     runtime: number;
     release_date: string;
@@ -159,7 +160,7 @@ export async function getFilmDetails(id: number) {
     return {
         id: film.id,
         imdb_id: film.imdb_id,
-        original_title: film.original_title,
+        original_title: film.title,
         poster_path: film.poster_path,
         runtime: film.runtime,
         release_date: film.release_date,

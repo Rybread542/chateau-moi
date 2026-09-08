@@ -17,8 +17,14 @@ import StPoster from "./st-poster";
 export default function StFilmRollDialog({ films } : { films: StFilmByStYear[] }) {
 
     const [ displayed, setDisplayed ] = useState<StFilmByStYear | null>(null)
+        
 
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
+
+    for (let i = films.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [films[i], films[j]] = [films[j], films[i]]; 
+    } 
 
     const handleRoll = async() => {
         const result = await getRolledFilmByStYear()

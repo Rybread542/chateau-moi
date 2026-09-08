@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog"
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { getRolledFilmByStYear } from "@/db/st-films";
 import { Button } from "../ui/button";
 import { Dice6 } from "lucide-react";
@@ -17,22 +17,24 @@ import StPoster from "./st-poster";
 export default function StFilmRollDialog({ films } : { films: StFilmByStYear[] }) {
 
     const [ displayed, setDisplayed ] = useState<StFilmByStYear | null>(null)
-        
-
     const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms))
 
-    for (let i = films.length - 1; i > 0; i--) {
-        let j = Math.floor(Math.random() * (i + 1));
-        [films[i], films[j]] = [films[j], films[i]]; 
-    } 
+    const shuffled = useMemo(() => {
+        const filmsCopy = [...films]
+        for (let i = filmsCopy.length - 1; i > 0; i--) {
+            let j = Math.floor(Math.random() * (i + 1));
+            [filmsCopy[i], filmsCopy[j]] = [filmsCopy[j], filmsCopy[i]]; 
+        } 
+        return filmsCopy
+    }, [films])
 
     const handleRoll = async() => {
         const result = await getRolledFilmByStYear()
         let idx = 0
 
         for (let i=0; i < 200; i++) {
-            idx = (idx + 1) % films.length
-            setDisplayed(films[idx])
+            idx = (idx + 1) % shuffled.length
+            setDisplayed(shuffled[idx])
             const prog = i/199
             const dTime = 10 + 350 * prog ** 8
             await delay(dTime)

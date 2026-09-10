@@ -206,7 +206,7 @@ function formatStFilmsByStYear(films: FilmReturnRow[]) {
 
 
 
-async function checkDuplicate(id: number, user: string, year = CURR_YEAR) {
+async function checkDuplicateByUser(id: number, user: string, year = CURR_YEAR) {
 
     const result = await db.select()
     .from(spooktoberFilms)
@@ -215,6 +215,21 @@ async function checkDuplicate(id: number, user: string, year = CURR_YEAR) {
                 eq(spooktoberFilms.stYear, year),
                 eq(spooktoberFilms.tmdbId, id),
                 eq(spooktoberFilms.submittedBy, user)
+            )
+        )
+
+    return result.length > 0
+}
+
+async function checkApprovedDuplicate(id: number, year = CURR_YEAR) {
+
+    const result = await db.select()
+    .from(spooktoberFilms)
+    .where(
+            and (
+                eq(spooktoberFilms.stYear, year),
+                eq(spooktoberFilms.tmdbId, id),
+                eq(spooktoberFilms.approved, true)
             )
         )
 
@@ -257,9 +272,10 @@ export async function getAllFilms() {
 
 export async function submitSTFilm(id: number, user: string, year = CURR_YEAR) {
     const filmDetails = await getFilmDetails(id)
-    const duplicate = await checkDuplicate(id, user)
+    const duplicateByUser = await checkDuplicateByUser(id, user)
+    const approvedDuplicate = await checkApprovedDuplicate(id)
     
-    if (!duplicate) {
+    if (!duplicateByUser) {
         await db.insert(spooktoberFilms)
         .values({
             tmdbId: filmDetails.id,
@@ -270,6 +286,7 @@ export async function submitSTFilm(id: number, user: string, year = CURR_YEAR) {
             poster: filmDetails.poster_path,
             submittedBy: user,
             stYear: year,
+            approved: approvedDuplicate
         })
         return { success: true } as const
     }
